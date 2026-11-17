@@ -6,7 +6,7 @@
 // Credit mỗi ván (chỉ ván được ghi vào lịch sử: ≥2 người đăng nhập, chơi đến hết):
 //   base × trọng số thời lượng (×1…×3, như bảng xếp hạng), hạng 1 (kể cả đồng hạng 1) nhân thêm winMul.
 //   Mỗi tài khoản nhận tối đa dayCap credit mỗi ngày (giờ Việt Nam). Ván bỏ dở: không ai được, không ai bị trừ.
-export const CREDIT = { base: 10, winMul: 1.5, dayCap: 300 };
+export const CREDIT = { base: 15, winMul: 1.5, dayCap: 300 };
 
 export const SLOTS = [
   { id: 'frame', name: 'Khung ảnh', icon: '🖼️', hint: 'Viền quanh ảnh đại diện ở phòng chờ' },
