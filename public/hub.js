@@ -213,7 +213,10 @@ async function ensureGame(m) {
   if (!ROOM || ROOM.matchId !== m.matchId) return null;
   const root = $('#game-root');
   root.innerHTML = '';
-  const cur = { matchId: m.matchId, key: m.game, entry, realtime: entry.realtime, css: [], inst: {} };
+  // Xếp chỗ ngẫu nhiên (ROOM.home): ghế i trong ván mang màu/tên của ghế home[i] mà người đó đã chọn ở phòng chờ.
+  const home = ROOM.home;
+  const seen = home ? { ...entry, seats: entry.seats.map((s, i) => entry.seats[home[i] ?? i]) } : entry;
+  const cur = { matchId: m.matchId, key: m.game, entry: seen, realtime: entry.realtime, css: [], inst: {} };
   current = cur;
   cur.inst = (await mod.default.mount(root, makeCtx(cur))) || {};
   show('game');

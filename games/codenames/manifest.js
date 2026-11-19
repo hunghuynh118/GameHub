@@ -19,6 +19,8 @@ export default {
   seats,
   // Chế độ 2 đội thì khối ghế đội Lục bị đóng.
   seatOn: (i, o) => i < (o.teams === 3 ? 15 : 10),
+  // Ghế = đội + vai (ghế đầu khối là Trưởng nhóm) do người chơi tự chọn → hub không xáo chỗ khi vào ván.
+  shuffle: false,
   options: [
     { key: 'teams', label: 'Số đội', default: 2,
       choices: [{ value: 2, label: '2 đội — bàn 5×5' }, { value: 3, label: '3 đội — bàn 6×6' }] },

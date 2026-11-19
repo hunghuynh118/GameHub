@@ -80,10 +80,15 @@ export function createHub({ games, lanUrls = () => [], publicUrl = () => null, a
   const avOf = m => (avatars && m && m.acct ? avatars.url(m.acct) : null);
   const online = (room, pid) => { const m = room.members.get(pid); return !!(m && m.conns.size); };
   const seatOf = (room, pid) => room.seats.findIndex(s => s.kind === 'human' && s.pid === pid);
-  function seatName(room, i) {
+  // Xếp chỗ ngẫu nhiên: trong ván, ghế i (vị trí/thứ tự trong game) do người ngồi ghế homeOf(i) ở phòng chờ giữ — người đó
+  // mang theo màu/tên ghế đã chọn (seatInfo). Ngoài ván thì homeOf(i) = i.
+  const homeOf = (room, i) => (room.match && room.match.home ? room.match.home[i] : i);
+  const seatInfo = (room, i) => gameOf(room).manifest.seats[homeOf(room, i)];
+  // Tên bot theo ghế ở phòng chờ (h) nên không đổi khi bị xáo chỗ.
+  function seatName(room, i, h = homeOf(room, i)) {
     const s = room.seats[i];
     if (s.kind === 'human') return (room.members.get(s.pid) || {}).name || '?';
-    if (s.kind === 'bot') return 'Bot ' + BOT_NAMES[i % BOT_NAMES.length] + (i >= BOT_NAMES.length ? ' ' + (1 + Math.floor(i / BOT_NAMES.length)) : '');
+    if (s.kind === 'bot') return 'Bot ' + BOT_NAMES[h % BOT_NAMES.length] + (h >= BOT_NAMES.length ? ' ' + (1 + Math.floor(h / BOT_NAMES.length)) : '');
     return '';
   }
 
@@ -97,6 +102,8 @@ export function createHub({ games, lanUrls = () => [], publicUrl = () => null, a
       estimate: g.manifest.estimate ? g.manifest.estimate(opts, filled) : '',
       turnMs: g.manifest.turnMs || DEFAULT_TURN_MS,
       playing: !!room.match, matchId: room.match ? room.match.id : null,
+      // home[i] = ghế ở phòng chờ của người đang giữ ghế i trong ván (màu/tên ghế theo home) — null = không xáo chỗ.
+      home: room.match ? room.match.home : null,
       seats: room.seats.map((s, i) => ({
         kind: s.kind, uid: s.pid ? (room.members.get(s.pid) || {}).uid : null, name: seatName(room, i),
         online: s.kind === 'bot' || (s.kind === 'human' && online(room, s.pid)),
@@ -148,11 +155,11 @@ export function createHub({ games, lanUrls = () => [], publicUrl = () => null, a
   }
   // Game cho ghế (thường là bot) nói một câu vào khung chat: say = [{ p: ghế, text, to?: [ghế...] }].
   function gameSay(room, say) {
-    const mt = room.match, seats = gameOf(room).manifest.seats;
+    const mt = room.match;
     for (const x of say || []) {
       const text = String(x.text || '').replace(/\s+/g, ' ').trim().slice(0, CHAT_LEN);
-      if (!text || !seats[x.p]) continue;
-      pushChat(room, { id: ++room.chatSeq, uid: 'seat' + x.p, name: seatName(room, x.p), seat: x.p, color: seats[x.p].color, text, at: Date.now(),
+      if (!text || !room.seats[x.p]) continue;
+      pushChat(room, { id: ++room.chatSeq, uid: 'seat' + x.p, name: seatName(room, x.p), seat: x.p, color: seatInfo(room, x.p).color, text, at: Date.now(),
         ...(x.to ? { to: x.to, mid: mt.id } : {}), ...(x.tag ? { tag: x.tag } : {}) });
     }
   }
@@ -182,17 +189,40 @@ export function createHub({ games, lanUrls = () => [], publicUrl = () => null, a
   }
 
   // ---------- vòng đời ván ----------
+  // Game theo lượt (không tickRate, manifest.shuffle !== false): xáo những người/bot đang ngồi giữa các ghế có người →
+  // vị trí trên bàn + thứ tự lượt ngẫu nhiên mỗi ván, còn màu/tên ghế đi theo người (home). Ghế trống/đóng giữ nguyên chỗ
+  // nên manifest.seatOn vẫn đúng. Về phòng chờ thì unshuffle() trả mọi người về ghế đã chọn.
+  function shuffleSeats(room, M, logic) {
+    const home = room.seats.map((_, i) => i);
+    if (logic.tickRate || M.shuffle === false) return null;
+    const used = home.filter(i => room.seats[i].kind === 'human' || room.seats[i].kind === 'bot');
+    const to = used.slice();
+    for (let k = to.length - 1; k > 0; k--) { const j = crypto.randomInt(k + 1); [to[k], to[j]] = [to[j], to[k]]; }
+    const old = room.seats.slice();
+    used.forEach((i, k) => { room.seats[i] = old[to[k]]; home[i] = to[k]; });
+    return home;
+  }
+  function unshuffle(room, home) {
+    if (!home) return;
+    const cur = room.seats.slice();
+    home.forEach((h, i) => { room.seats[h] = cur[i]; });
+  }
+
   function startMatch(room) {
     const g = gameOf(room), M = g.manifest;
-    const info = room.seats.map((s, i) => (s.kind === 'human' || s.kind === 'bot' ? { kind: s.kind, name: seatName(room, i) } : null));
-    const n = info.filter(Boolean).length;
+    const n = room.seats.filter(s => s.kind === 'human' || s.kind === 'bot').length;
     if (n < M.minPlayers) throw new Error(`${M.name} cần ít nhất ${M.minPlayers} người chơi (người hoặc bot)`);
+    const home = shuffleSeats(room, M, g.logic);
+    const info = room.seats.map((s, i) => (s.kind === 'human' || s.kind === 'bot' ? { kind: s.kind, name: seatName(room, i, home ? home[i] : i) } : null));
     const now = Date.now();
-    const { state, events } = g.logic.create({ seats: info, opts: { ...optsOf(room) }, now });
+    let made;
+    try { made = g.logic.create({ seats: info, opts: { ...optsOf(room) }, now }); }
+    catch (e) { unshuffle(room, home); throw e; }
+    const { state, events } = made;
     // players: ai ngồi ghế nào lúc bắt đầu (ghi vào lịch sử khi hết ván — rời phòng giữa chừng vẫn tính, máy đi giúp).
     const players = room.seats.map((s, i) => (info[i] ? { seat: i, acct: s.kind === 'human' ? (room.members.get(s.pid) || {}).acct || null : null,
       name: info[i].name, ...(s.kind === 'bot' ? { bot: true } : {}) } : null)).filter(Boolean);
-    room.match = { id: ++room.matchSeq, logic: g.logic, turnMs: M.turnMs || DEFAULT_TURN_MS, state, timer: null, tick: null, busyUntil: now, deadline: 0,
+    room.match = { id: ++room.matchSeq, logic: g.logic, turnMs: M.turnMs || DEFAULT_TURN_MS, state, timer: null, tick: null, busyUntil: now, deadline: 0, home,
       game: room.gameKey, opts: { ...optsOf(room) }, players, startedAt: now, recorded: false,
       vc: new Map() };   // vc: ghế → bản đã phát lần trước (split) để tính delta
     broadcastRoom(room);
@@ -216,6 +246,7 @@ export function createHub({ games, lanUrls = () => [], publicUrl = () => null, a
     clearTimeout(mt.timer);
     clearInterval(mt.tick);
     if (!mt.logic.isOver(mt.state)) record(room, { aborted: true, by });
+    unshuffle(room, mt.home);
     room.match = null;
   }
 
@@ -569,7 +600,7 @@ export function createHub({ games, lanUrls = () => [], publicUrl = () => null, a
         if (Date.now() - m.lastChat < CHAT_GAP_MS) throw new Error('Gõ chậm lại chút nào!');
         m.lastChat = Date.now();
         // Lưu luôn màu ghế lúc gửi: đổi game/đổi ghế sau đó thì tin cũ vẫn giữ màu cũ.
-        const seat = seatOf(r, m.pid), info = seat >= 0 ? gameOf(r).manifest.seats[seat] : null;
+        const seat = seatOf(r, m.pid), info = seat >= 0 ? seatInfo(r, seat) : null;
         const c = { id: ++r.chatSeq, uid: m.uid, name: m.name, seat, color: info ? info.color : null, text, at: m.lastChat };
         const look = lookOf(m);   // hiệu ứng tên, danh hiệu, khung chat lúc gửi
         if (look) { const { name, title, bubble } = look; c.look = { name, title, bubble }; }

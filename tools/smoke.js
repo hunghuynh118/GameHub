@@ -57,6 +57,12 @@ check((await host.req('fillBots')).ok, 'lấp ghế trống bằng bot');
 await sleep(200);
 check(host.room.seats.every(s => s.kind !== 'open'), 'không còn ghế trống');
 check((await host.req('start')).ok, 'bắt đầu ván');
+await sleep(200);
+// Game theo lượt: hub xáo chỗ ngồi khi vào ván (màu ghế đi theo người) → ghế trong ván tra theo uid.
+const seatIn = (c, uid) => c.room.seats.findIndex(s => s.kind === 'human' && s.uid === uid);
+const hostSeat = seatIn(host, created.uid), guestSeat = seatIn(host, joined.uid);
+check(hostSeat >= 0 && guestSeat >= 0, `ghế trong ván: chủ ${hostSeat}, khách ${guestSeat}${host.room.home ? ' (đã xáo chỗ)' : ''}`);
+check(!host.room.home || (host.room.home[hostSeat] === 0 && host.room.home[guestSeat] === 1), 'home[] trỏ về ghế đã chọn ở phòng chờ');
 
 // Cả 2 người tự chơi: gửi hành động bot-đơn-giản khi tới lượt (game theo lượt) hoặc bấm liên tục (real-time).
 // Game có thể đặt state.ask = ghế đang phải quyết định (khi khác state.turn, vd bị Xin Bài).
@@ -114,7 +120,7 @@ const end = Date.now() + +secs * 1000;
 let acted = 0;
 while (Date.now() < end) {
   await sleep(300);
-  for (const [c, seat] of [[host, 0], [guest, 1]]) {
+  for (const [c, seat] of [[host, hostSeat], [guest, guestSeat]]) {
     const g = c.game;
     if (!g) continue;
     const me = g.state.players && g.state.players[seat];
@@ -138,18 +144,19 @@ check(host.games < 3 || host.deltas > 0, `nhận state dạng delta (${host.delt
 // Rớt mạng rồi vào lại
 guest.ws.close();
 await sleep(300);
-check(host.room.seats[1].online === false, 'khách rớt mạng → ghế hiện offline');
+check(host.room.seats[guestSeat].online === false, 'khách rớt mạng → ghế hiện offline');
 const back = client('Khách', created.code);
 await back.ready;
 const rejoin = await back.req('join', { code: created.code, pid: joined.pid });
 await sleep(300);
 check(rejoin.ok && rejoin.uid === joined.uid, 'khách vào lại bằng pid cũ, giữ nguyên danh tính');
-check(back.room && back.room.seats[1].uid === joined.uid && back.room.seats[1].online, 'vẫn ngồi đúng ghế 1 và online lại');
+check(back.room && back.room.seats[guestSeat].uid === joined.uid && back.room.seats[guestSeat].online, `vẫn ngồi đúng ghế ${guestSeat} và online lại`);
 check(back.game && back.game.matchId === host.game.matchId, 'nhận lại trạng thái ván đang chơi');
 
 check((await host.req('lobby')).ok, 'chủ phòng đưa mọi người về phòng chờ');
 await sleep(200);
 check(back.room.playing === false, 'khách thấy phòng đã về chờ');
+check(back.room.seats[0].uid === created.uid && back.room.seats[1].uid === joined.uid && !back.room.home, 'về phòng chờ: ai về đúng ghế đã chọn');
 
 for (const c of [host, back]) c.ws.close();
 console.log(failed ? '\n❌ SMOKE TEST THẤT BẠI' : '\n✅ SMOKE TEST OK');

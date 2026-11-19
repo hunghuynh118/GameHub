@@ -31,7 +31,7 @@ const SVGNS = 'http://www.w3.org/2000/svg';
 const KNIGHT = '♞︎';
 
 // ---------- trạng thái của instance (chỉ 1 ván được mount tại 1 thời điểm) ----------
-let CTX, UI, SFX, ROOT;
+let CTX, UI, SFX, ROOT, SEATS;   // SEATS = ctx.game.seats (màu/tên ghế theo người — hub xáo chỗ mỗi ván)
 let GAME, NAMES, HE, STB, TURN_P, L_SPEC, L_MET, L_HINT, L_HORSE;
 let DEADLINE, pending, cardMode, SPEED, playing, overShown, spinN, timerInt, keyHandler;
 
@@ -40,7 +40,7 @@ const esc = s => UI.esc(s);
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const mySeat = () => CTX.me().seat;
 const canAct = () => !!GAME && !playing && !pending && GAME.phase !== 'over' && mySeat() >= 0 && GAME.turn === mySeat();
-const nm = p => (p == null ? '???' : `<b class="pn" style="--c:${C.SEATS[p].color}">${esc(NAMES[p] || C.SEATS[p].name)}</b>`);
+const nm = p => (p == null ? '???' : `<b class="pn" style="--c:${SEATS[p].color}">${esc(NAMES[p] || SEATS[p].name)}</b>`);
 function S(tag, attrs, parent) {
   const e = document.createElementNS(SVGNS, tag);
   for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -128,12 +128,12 @@ function buildBoard(st) {
     <radialGradient id="gBoard" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#456e5d"/><stop offset="1" stop-color="#253f36"/></radialGradient>
     <radialGradient id="gCenter"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".45"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/></radialGradient>
     <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    ${C.SEATS.map((s, p) => `<radialGradient id="hg${p}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".38" stop-color="${s.color}"/><stop offset="1" stop-color="${shade(s.color, -0.5)}"/></radialGradient>`).join('')}`;
+    ${SEATS.map((s, p) => `<radialGradient id="hg${p}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".38" stop-color="${s.color}"/><stop offset="1" stop-color="${shade(s.color, -0.5)}"/></radialGradient>`).join('')}`;
   const bg = S('g', {}, svg);
   S('polygon', { points: poly(ROUT), fill: 'url(#gBoard)', stroke: '#8b6243', 'stroke-width': 14, 'stroke-linejoin': 'round' }, bg);
   for (let k = 0; k < N; k++) {
     const a = polar(R - 22, k), b = polar(R - 22, (k + 1) % N), p = st.ring[k];
-    S('polygon', { points: `0,0 ${a.x},${a.y} ${b.x},${b.y}`, fill: p != null ? C.SEATS[p].color : '#888', opacity: p != null ? 0.1 : 0.03 }, bg);
+    S('polygon', { points: `0,0 ${a.x},${a.y} ${b.x},${b.y}`, fill: p != null ? SEATS[p].color : '#888', opacity: p != null ? 0.1 : 0.03 }, bg);
   }
   for (const f of [0.4, 0.63, 0.86]) S('circle', { r: RIN * f, fill: 'none', stroke: 'rgba(255,255,255,.06)', 'stroke-width': 2, 'stroke-dasharray': '3 12' }, bg);
   S('polygon', { points: poly(R), fill: 'none', stroke: 'rgba(255,255,255,.07)', 'stroke-width': 36, 'stroke-linejoin': 'round' }, bg);
@@ -141,17 +141,17 @@ function buildBoard(st) {
   for (let c = 0; c < st.L; c++) {
     const q = trackPos(c), p = C.sideSeat(st, c);
     if (p != null && c % SIDE === 0) {
-      const col = C.SEATS[p].color, g = S('circle', { cx: q.x, cy: q.y, r: 17, fill: col, 'fill-opacity': 0.25, stroke: col, 'stroke-width': 4 }, bg);
-      S('title', {}, g).textContent = `Cửa chuồng ${C.SEATS[p].name}`;
+      const col = SEATS[p].color, g = S('circle', { cx: q.x, cy: q.y, r: 17, fill: col, 'fill-opacity': 0.25, stroke: col, 'stroke-width': 4 }, bg);
+      S('title', {}, g).textContent = `Cửa chuồng ${SEATS[p].name}`;
     } else if (p != null && c % SIDE === 1) {
-      S('circle', { cx: q.x, cy: q.y, r: 15, fill: C.SEATS[p].color, 'fill-opacity': 0.9, stroke: '#fff', 'stroke-width': 2 }, bg);
+      S('circle', { cx: q.x, cy: q.y, r: 15, fill: SEATS[p].color, 'fill-opacity': 0.9, stroke: '#fff', 'stroke-width': 2 }, bg);
       S('text', { x: q.x, y: q.y + 1, 'font-size': 15, fill: '#fff', class: 'lbl', style: 'stroke-width:3px' }, bg).textContent = '★';
     } else S('circle', { cx: q.x, cy: q.y, r: 12.5, class: 'cell' }, bg);
   }
   // chuồng đích (6 bậc)
   for (let p = 0; p < st.players.length; p++) {
     if (!st.players[p].active) continue;
-    const col = C.SEATS[p].color, need = C.HOME - st.opts.horses;
+    const col = SEATS[p].color, need = C.HOME - st.opts.horses;
     for (let s = 1; s <= C.HOME; s++) {
       const q = homePos(p, s);
       S('circle', { cx: q.x, cy: q.y, r: 18, fill: col, 'fill-opacity': s > need ? 0.3 : 0.12, stroke: col, 'stroke-width': s > need ? 2.5 : 1.5, 'stroke-opacity': 0.85 }, bg);
@@ -165,7 +165,7 @@ function buildBoard(st) {
   STB = [];
   st.players.forEach((pl, p) => {
     if (!pl.active) return;
-    const col = C.SEATS[p].color, c = stableCenter(p);
+    const col = SEATS[p].color, c = stableCenter(p);
     STB[p] = S('circle', { cx: c.x, cy: c.y, r: 60, fill: col, 'fill-opacity': 0.16, stroke: edge(col), 'stroke-width': 3, class: 'stb' }, bg);
     pl.horses.forEach((_, h) => { const q = stablePos(p, h); S('circle', { cx: q.x, cy: q.y, r: 16, fill: 'rgba(42,39,35,.1)', stroke: edge(col), 'stroke-opacity': 0.6 }, bg); });
     S('text', { x: c.x, y: c.y + Math.sign(c.y) * 82, 'font-size': 24, fill: shade(col, isLight(col) ? -0.6 : -0.42), class: 'lbl lbl-out' }, bg).textContent = pl.name;
@@ -180,7 +180,7 @@ function makeHorse(p, h) {
   const g = S('g', { class: 'horse', 'data-p': p, 'data-h': h }, L_HORSE);
   S('circle', { r: 30, fill: 'transparent' }, g); // vùng chạm rộng cho điện thoại
   S('ellipse', { cx: 0, cy: 14, rx: 13, ry: 4, fill: 'rgba(0,0,0,.45)' }, g);
-  S('circle', { class: 'turnc', r: 22, style: `--c:${C.SEATS[p].color}` }, g);
+  S('circle', { class: 'turnc', r: 22, style: `--c:${SEATS[p].color}` }, g);
   S('circle', { class: 'halo', r: 21 }, g);
   S('circle', { class: 'shieldc', r: 23 }, g);
   const body = S('g', { class: 'body' }, g); // nhún nhẹ khi tới lượt (transform của g dùng để đặt vị trí)
@@ -306,7 +306,7 @@ function buildDice() {
 async function animRoll(e) {
   const d = $('#dice'), cube = d.querySelector('.cube');
   d.classList.toggle('golden', !!e.golden);
-  d.style.setProperty('--glow', C.SEATS[e.p].color);
+  d.style.setProperty('--glow', SEATS[e.p].color);
   CTX.skin.set(d, e.p, 'dice');   // xúc xắc người gieo mua ở cửa hàng (Xúc Xắc Vàng .golden vẫn đè lên)
   spinN += 2;
   const [rx, ry] = FACE[e.v];
@@ -320,7 +320,7 @@ async function animRoll(e) {
   if (e.turbo) mods.push(`🚀 ${e.v} × 2 = ${e.v * 2}`);
   if (e.ghost) mods.push('👻 bay qua đầu');
   $('#dice-mods').textContent = mods.join(' · ');
-  if (e.v === 6) { const s = toScreen({ x: 0, y: 0 }); UI.burst(s.x, s.y, ['#ffd23f', '#fff', C.SEATS[e.p].color], 34, 6); SFX.pop(); }
+  if (e.v === 6) { const s = toScreen({ x: 0, y: 0 }); UI.burst(s.x, s.y, ['#ffd23f', '#fff', SEATS[e.p].color], 34, 6); SFX.pop(); }
   await wait(200);
 }
 
@@ -346,7 +346,7 @@ async function playEvent(e) {
       for (let i = 0; i < e.path.length; i++) await hopTo(g, locPos(e.path[i]), i);
       snd.land();
       const s = toScreen(horseQ(g));
-      UI.burst(s.x, s.y, [C.SEATS[e.p].color, '#fff'], 12, 3);
+      UI.burst(s.x, s.y, [SEATS[e.p].color, '#fff'], 12, 3);
       if (e.kind === 'out') log(`🐎 ${nm(e.p)} xuất quân!`);
       if (e.kind === 'home') log(`⬆️ ${nm(e.p)} lên bậc chuồng`);
       if (e.kind === 'enter') { log(`🏁 ${nm(e.p)} đưa ngựa vào chuồng đích!`); floatBoard(horseQ(g), '🏁'); SFX.card(); }
@@ -357,8 +357,8 @@ async function playEvent(e) {
       if (e.reason === 'hole') { SFX.tele(); log(`🕳️ Ngựa của ${nm(e.p)} rơi xuống hố đen, về chuồng!`); }
       else {
         snd.kick(); shake();
-        UI.burst(s.x, s.y, [C.SEATS[e.p].color, e.by != null ? C.SEATS[e.by].color : '#fff', '#fff'], 50, 9);
-        banner('💥 ĐÁ!', `${nm(e.by)} đá ngựa ${nm(e.p)} về chuồng`, e.by != null ? C.SEATS[e.by].color : '#fff', 1100);
+        UI.burst(s.x, s.y, [SEATS[e.p].color, e.by != null ? SEATS[e.by].color : '#fff', '#fff'], 50, 9);
+        banner('💥 ĐÁ!', `${nm(e.by)} đá ngựa ${nm(e.p)} về chuồng`, e.by != null ? SEATS[e.by].color : '#fff', 1100);
         log(`💥 ${nm(e.by)} đá ngựa của ${nm(e.p)} về chuồng!`);
       }
       g.classList.remove('shielded');
@@ -402,7 +402,7 @@ async function playEvent(e) {
       let extra = '';
       if (e.card === 'freeze') extra = ` lên ${nm(e.target)}`;
       if (e.card === 'golden') extra = ` → chọn số <b>${e.value}</b>`;
-      banner(`${cd.icon} ${cd.name.toUpperCase()}`, `${nm(e.p)} dùng thẻ${extra}`, C.SEATS[e.p].color, C.DUR.useCard);
+      banner(`${cd.icon} ${cd.name.toUpperCase()}`, `${nm(e.p)} dùng thẻ${extra}`, SEATS[e.p].color, C.DUR.useCard);
       ({ freeze: snd.freeze, ghost: snd.mystery, turbo: SFX.whoosh, golden: SFX.card, shield: snd.shield, swap: SFX.tele })[e.card]();
       log(`${cd.icon} ${nm(e.p)} dùng <b>${cd.name}</b>${extra}`);
       await wait(C.DUR.useCard); break;
@@ -446,7 +446,7 @@ async function playEvent(e) {
       log(`🐉 ${nm(e.p)} gieo 3 lần 6 liên tiếp — THẦN MÃ!`);
       await wait(C.DUR.divine); break;
     case 'win':
-      banner(`🏆 ${esc(NAMES[e.p]).toUpperCase()}<br>CHIẾN THẮNG!`, `${C.SEATS[e.p].horse} về đích đầu tiên`, C.SEATS[e.p].color, C.DUR.win);
+      banner(`🏆 ${esc(NAMES[e.p]).toUpperCase()}<br>CHIẾN THẮNG!`, `${SEATS[e.p].label} về đích đầu tiên`, SEATS[e.p].color, C.DUR.win);
       SFX.win(); UI.confetti(); UI.fireworks(8, SFX.pop);
       log(`🏆 ${nm(e.p)} <b>CHIẾN THẮNG!</b>`);
       await wait(C.DUR.win); break;
@@ -513,7 +513,7 @@ function renderGame() {
 function setTurnUI(p) {
   ROOT.querySelectorAll('.pcard').forEach(d => d.classList.toggle('active', +d.dataset.p === p));
   markTurn(p);
-  $('#dice').style.setProperty('--glow', C.SEATS[p].color);
+  $('#dice').style.setProperty('--glow', SEATS[p].color);
   CTX.skin.set($('#dice'), p, 'dice');
 }
 function renderPanels() {
@@ -526,11 +526,11 @@ function renderPanels() {
     const pct = Math.round(C.scoreOf(GAME, pl) / C.maxScore(GAME, pl) * 100);
     const d = UI.el('div', 'pcard' + (p === GAME.turn && GAME.phase !== 'over' ? ' active' : ''));
     d.dataset.p = p;
-    d.style.setProperty('--c', C.SEATS[p].color);
+    d.style.setProperty('--c', SEATS[p].color);
     const status = pl.kind === 'bot' ? '🤖' : seat && seat.online ? '🟢' : '⚫';
     d.innerHTML = `
       <div class="p-top">${CTX.skin.face(p)}<span class="p-name pn">${esc(pl.name)}</span>${p === me ? '<span class="tag">BẠN</span>' : ''}<span title="${pl.kind === 'bot' ? 'Bot' : seat && seat.online ? 'Đang online' : 'Mất kết nối'}">${status}</span></div>
-      <div class="p-sub">${C.SEATS[p].horse} · 🏠${cnt('stable')} 🏇${cnt('track')} 🏁${cnt('home')}${pl.frozen ? ` · ❄️×${pl.frozen}` : ''}</div>
+      <div class="p-sub">${SEATS[p].label} · 🏠${cnt('stable')} 🏇${cnt('track')} 🏁${cnt('home')}${pl.frozen ? ` · ❄️×${pl.frozen}` : ''}</div>
       ${GAME.opts.chaos ? `<div class="p-cards">${pl.cards.map(c => `<span title="${C.CARDS[c].name}: ${C.CARDS[c].desc}">${C.CARDS[c].icon}</span>`).join('') || '<span class="muted small">chưa có thẻ</span>'}</div>` : ''}
       <div class="p-bar"><i style="width:${pct}%"></i></div>
       <div class="timer"><i></i></div>`;
@@ -616,7 +616,7 @@ function showGameOver() {
   const medal = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
   UI.openModal(`
     <h2 class="center">🏆 ${nm(GAME.winner)} vô địch!</h2>
-    <ol class="rank">${ranks.map((x, i) => `<li style="--c:${C.SEATS[x.p].color}"><span>${medal[i]}</span><span class="grow">${nm(x.p)} <span class="muted small">${C.SEATS[x.p].horse}</span></span><span>${Math.round(C.scoreOf(GAME, x.pl) / C.maxScore(GAME, x.pl) * 100)}%</span></li>`).join('')}</ol>
+    <ol class="rank">${ranks.map((x, i) => `<li style="--c:${SEATS[x.p].color}"><span>${medal[i]}</span><span class="grow">${nm(x.p)} <span class="muted small">${SEATS[x.p].label}</span></span><span>${Math.round(C.scoreOf(GAME, x.pl) / C.maxScore(GAME, x.pl) * 100)}%</span></li>`).join('')}</ol>
     <div class="btns">
       <button class="ghost" data-a="close">👀 Xem bàn cờ</button>
       ${host ? '<button class="ghost" data-a="lobby">🏠 Về phòng chờ</button><button class="gold" data-a="again">🔁 Ván mới</button>' : '<span class="muted small">Chờ chủ phòng mở ván mới...</span>'}
@@ -639,7 +639,7 @@ function onCard(card) {
   }
   if (card === 'freeze') {
     const opts = GAME.players.map((pl, p) => ({ pl, p })).filter(x => x.pl.active && !x.pl.finished && x.p !== me)
-      .map(x => ({ html: esc(x.pl.name), value: x.p, color: C.SEATS[x.p].color }));
+      .map(x => ({ html: esc(x.pl.name), value: x.p, color: SEATS[x.p].color }));
     return UI.pickModal('❄️ Đóng băng ai?', opts, v => sendCard({ card, target: v }));
   }
   if (!mine.some(h => h.loc === 'track' && !(card === 'shield' && h.shield))) return UI.toast('Bạn chưa có ngựa nào phù hợp trên đường đua');
@@ -731,7 +731,7 @@ async function update(msg, { backlog = 0, hidden = false } = {}) {
 
 export default {
   async mount(root, ctx) {
-    CTX = ctx; UI = ctx.ui; SFX = ctx.sfx; ROOT = root;
+    CTX = ctx; UI = ctx.ui; SFX = ctx.sfx; ROOT = root; SEATS = ctx.game.seats;
     GAME = null; NAMES = []; HE = null;
     DEADLINE = 0; pending = false; cardMode = null; SPEED = 1; playing = false; overShown = false; spinN = 0;
     await ctx.loadCss(new URL('./style.css', import.meta.url));
