@@ -327,6 +327,7 @@ function toolbar(container, { help } = {}) {
 // ================= MÀN HÌNH =================
 function show(name) {
   for (const s of ['home', 'room', 'game', 'loading']) $('#scr-' + s).classList.toggle('hidden', s !== name);
+  document.documentElement.dataset.screen = name;   // CSS theo màn hình (vd xmas.css ẩn trang trí khi đang chơi)
   showChat(name !== 'home');
 }
 

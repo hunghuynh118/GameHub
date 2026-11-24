@@ -1,83 +1,85 @@
-# 🪐 Celestials Game Hub — chơi game cùng bạn bè
+# 🪐 Celestials Game Hub — Play Party & Board Games with Friends
 
-Tạo phòng, rủ bạn bè vào bằng mã 4 chữ, chủ phòng chọn game rồi cùng chơi qua **LAN hoặc Internet**. Ghế trống có thể cho **Bot** ngồi.
+Create a room, invite friends with a 4-letter code, let the host pick a game, and play together over **LAN or the Internet**. Empty seats can be filled with **Bots** anytime.
 
-| Game | Kiểu | Người chơi |
+| Game | Type | Players |
 |---|---|---|
-| 🐴 **Cờ Cá Ngựa — Lục Mã Hỗn Chiến** — bàn đổi hình theo số người (2 vuông đối diện, 3 tam giác, 4 vuông, 5 ngũ giác, 6 lục giác) | theo lượt | 2–6 |
-| 💣 **Mèo Nổ** — Exploding Kittens, thêm chế độ Hỗn Loạn (Mèo Hẹn Giờ, Bom Tổng Lực, hồn ma...) | theo lượt + hô "Không!" ngoài lượt | 2–6 |
-| 💎 **Kho Báu Inca** — Incan Gold, thêm chế độ Hỗn Loạn (bùa, lá bí ẩn, đền có luật riêng, chơi xấu nhau) | chọn bí mật cùng lúc | 2–8 |
-| 💀 **Hoa & Sọ** — Skull, thêm chế độ Hỗn Loạn (đĩa đặc biệt, điềm báo mỗi vòng, hồn ma ám chồng đĩa) | theo lượt + úp đĩa đầu cùng lúc | 3–6 |
-| 🃏 **Flip 7** — rút hay dừng, trùng số là cháy; chế độ Bất Ngờ (Đổi Chác, Nam Châm, Tiên Tri, Cầu Vồng, sự kiện mỗi vòng, Sương Mù) | theo lượt | 2–8 |
-| 🎴 **UNO** — hô UNO! kẻo bị bắt; luật nhà cộng dồn, 7-0, chặn ngang, rút tới khi đánh được; chế độ Bất Ngờ (Gương, Bom Màu, Quà, Tăng Tốc, Đổi Tay, Lốc Xoáy, sự kiện mỗi vòng bàn) | theo lượt + chặn ngang/bắt lỗi chen ngang | 2–8 |
-| 🎩 **Cờ Tỷ Phú** — Monopoly rút gọn ~30 phút: chia đất đầu ván, đấu giá kín, mua lại cưỡng chế, thắng ngay khi đủ 3 bộ màu; chế độ Bất Ngờ (thẻ kỹ năng, biến cố toàn bàn, Sòng Bạc, Tàu Cao Tốc, Cổng Dịch Chuyển, Hũ Vàng) | theo lượt + đấu giá cùng lúc | 2–6 |
-| 🎭 **Coup** — bịp vai để lấy xu, ám sát, đảo chính; ai nghi thì thách thức hoặc chặn (cả bàn phản ứng cùng lúc). Phe phái tuỳ chọn (Đổi Phe, Biển Thủ); chế độ Bất Ngờ (vai mới Nhà Cái, Kẻ Đầu Độc, Gián Điệp, Thầy Bói, Vệ Sĩ; biến cố mỗi vòng bàn; chợ đen Áo Giáp/Mặt Nạ/Kính Lúp/Thợ Rèn Lá; hồn ma) | theo lượt + thách thức/chặn cùng lúc | 2–8 |
-| 🛸 **Kẻ Mạo Danh** — kiểu Among Us 2D: làm nhiệm vụ mini-game, Kẻ Mạo Danh giết/phá hoại/chui cống, báo xác → họp & bỏ phiếu. 5 bản đồ có cơ chế riêng (Trạm Vũ Trụ, Tàu Tốc Hành Đêm, Trạm Bắc Cực, Công Viên Ma, Tàu Ngầm), vai trò ẩn (Cảnh Sát, Hộ Vệ, Thám Tử, Kỹ Sư, Thầy Đồng, Kẻ Ngốc, Kẻ Biến Hình, Bóng Ma, Cặp Đôi), biến cố ngẫu nhiên, thùng vật phẩm, đàm thoại theo khoảng cách | real-time | 4–10 |
-| 🕵️ **Mật Danh** — Codenames tiếng Việt: Trưởng nhóm ra 1 từ + 1 số, cả đội bỏ phiếu chỉ lá; 2 đội (5×5) hoặc 3 đội (6×6), 4 bộ từ (Tổng hợp, Đời sống, Thiên nhiên, Phiêu lưu & tưởng tượng) hoặc bộ hình emoji; bật/tắt riêng Sự kiện bất ngờ (Động Đất, Sương Mù, Gương Thần...), Kỹ năng đội (Gợi Ý Kép, Lá Chắn, Nhiễu Sóng...), Lá đặc biệt (Kho Báu, Bom, Kẻ Phản Bội...). Bot làm được cả Trưởng nhóm lẫn người đoán | theo lượt + bỏ phiếu cùng lúc trong đội | 4–15 |
-| 💎 **Splendor** — thương nhân ngọc: lấy ngọc, giữ chỗ thẻ lấy vàng, mua thẻ để giảm giá vĩnh viễn, gom thẻ đón quý tộc; 5–6 người có thêm ngọc và thẻ. Chế độ Bất Ngờ: thẻ năng lực (Mỏ Lộ Thiên, Song Ngọc, Lăng Kính, Thêm Lượt, Quà Tặng, Kẻ Cắp, Móc Túi, Thu Thuế), sự kiện mỗi vòng bàn, quý tộc đặc quyền, mục tiêu bí mật, người đi sau được bù ngọc | theo lượt | 2–6 |
-| 🎨 **Vẽ Đoán** — kiểu skribbl: hoạ sĩ chọn 1/3 từ rồi vẽ, cả bàn gõ đáp án (không dấu vẫn tính, có báo "gần đúng"), lộ dần chữ cái; kho ~550 từ tiếng Việt theo 7 chủ đề + bộ Dễ. Bật/tắt riêng: Biến cố cọ vẽ (Gương, Mực Phai, Ba Nét, Đơn Sắc, Bút Run, Đèn Pin, Vẽ Mù, Chong Chóng, Nhanh Tay, Chổi Lớn), Vật phẩm người đoán (Soi Chữ, Xem Chủ Đề, Bom Khói, Đặt Cược), Từ đặc biệt (chọn độ khó, Từ Vàng ×2, Song Hoạ 2 người cùng vẽ), Bình chọn & phòng tranh (thả cảm xúc, giải thưởng, xem lại/tải tranh). Bot vẽ bằng cách phác hoạ emoji | real-time | 2–12 |
-| ⚡ Phản Xạ *(game mẫu, chỉ hiện khi `HUB_DEV=1`)* | real-time | 2–6 |
+| 🐴 **Ludo — Six-Horse Mayhem (*Cờ Cá Ngựa*)** — dynamic board shape based on player count (2 opposite square, 3 triangle, 4 square, 5 pentagon, 6 hexagon) | Turn-based | 2–6 |
+| 💣 **Exploding Kittens (*Mèo Nổ*)** — with Chaos mode (Time-Bomb Kitten, Total Meltdown, ghosts, etc.) | Turn-based + out-of-turn "Nope!" window | 2–6 |
+| 💎 **Incan Gold (*Kho Báu Inca*)** — with Chaos mode (charms, mystery cards, special temple rules, sabotage) | Simultaneous secret choice | 2–8 |
+| 💀 **Skull (*Hoa & Sọ*)** — with Chaos mode (special discs, per-round omens, ghosts haunting stacks) | Turn-based + simultaneous first disc | 3–6 |
+| 🃏 **Flip 7** — press your luck (draw or stay, duplicate busts); Chaos mode (Swap, Magnet, Oracle, Rainbow, per-round events, Fog) | Turn-based | 2–8 |
+| 🎴 **UNO** — shout UNO! or get caught; house rules for stacking, 7-0, jump-in, draw-to-match; Chaos mode (Mirror, Color Bomb, Gift, Turbo, Hand Swap, Tornado, per-round events) | Turn-based + jump-in / catch window | 2–8 |
+| 🎩 **Monopoly (*Cờ Tỷ Phú*)** — ~30-minute streamlined match: starting properties, sealed auctions, forced buyouts, instant win with 3 color sets; Chaos mode (skill cards, global events, Casino, Express Train, Portals, Jackpot) | Turn-based + simultaneous auction | 2–6 |
+| 🎭 **Coup** — bluff roles to gather coins, assassinate, and coup; anyone can challenge or block (simultaneous reaction window). Optional Factions (Conversion, Embezzlement); Chaos mode (new roles: Bookie, Poisoner, Spy, Fortune Teller, Bodyguard; round events; black market Armor/Mask/Magnifier/Forger; ghosts) | Turn-based + simultaneous challenge/block | 2–8 |
+| 🛸 **Impostor (*Kẻ Mạo Danh*)** — 2D Among Us-style social deduction: mini-game tasks, Impostor kills/sabotages/vents, body reports → meetings & voting. 5 maps with unique mechanics (Space Station, Night Express, Arctic Base, Haunted Park, Submarine), hidden roles (Sheriff, Guardian, Detective, Engineer, Medium, Jester, Shapeshifter, Phantom, Lovers), random events, item crates, proximity voice chat | Real-time | 4–10 |
+| 🕵️ **Codenames (*Mật Danh*)** — Spymaster gives 1 word + 1 number, teammates vote on cards; 2 teams (5×5) or 3 teams (6×6), 4 word packs (General, Everyday Life, Nature, Adventure & Fantasy) or emoji picture mode; toggleable Events (Earthquake, Fog, Magic Mirror...), Team Skills (Double Clue, Shield, Jammer...), Special Cards (Treasure, Bomb, Traitor...). Bots can play both Spymaster and Guesser | Turn-based + simultaneous team voting | 4–15 |
+| 💎 **Splendor** — gem merchant engine-builder: draft gems, reserve cards for gold, buy cards for permanent discounts, attract nobles; 5–6 player scaling with extra gems & cards. Chaos mode: card powers (Open Mine, Twin Gem, Prism, Extra Turn, Gift, Thief, Pickpocket, Tax), round events, noble perks, secret objectives, catch-up gems for later turn order | Turn-based | 2–6 |
+| 🎨 **Draw & Guess (*Vẽ Đoán*)** — skribbl-style drawing game: artist picks 1 of 3 words and draws while everyone guesses (diacritic-insensitive matching + "close guess" hints) with gradual letter reveals; ~550 Vietnamese words across 7 topics + Easy pack. Toggleable Brush Events (Mirror, Fading Ink, Three Strokes, Monochrome, Shaky Pen, Flashlight, Blind Draw, Pinwheel, Speed Draw, Giant Brush), Guesser Items (Reveal Letter, Show Topic, Smoke Bomb, Double Bet), Special Words (difficulty choice, Golden Word ×2, Dual Artists), Voting & Gallery (reactions, awards, replay/download). Bots draw by sketching emoji contours | Real-time | 2–12 |
+| ⚡ **Reflex (*Phản Xạ*)** *(sample template game, shown only with `HUB_DEV=1`)* | Real-time | 2–6 |
 
-## Chạy
+## Getting Started
 
-Cần Node.js 22.13+ (dùng SQLite có sẵn trong Node). Không cần `npm install`.
+Requires **Node.js 22.13+** (uses built-in `node:sqlite`). **Zero dependencies — no `npm install` needed.**
 
 ```bash
-node server.js            # hoặc: npm start
-npm run online            # như trên + tự mở tunnel Cloudflare để chơi qua Internet
-PORT=8080 node server.js  # đổi cổng
+node server.js            # or: npm start
+npm run online            # same + automatically opens a Cloudflare quick tunnel for Internet play
+PORT=8080 node server.js  # custom port
 ```
 
-Mở http://localhost:3000 → nhập tên → **Tạo phòng** → gửi link mời → chọn game → **Bắt đầu**.
+Open `http://localhost:3000` → enter your name → **Create Room** → share the invite link → pick a game → **Start**.
 
-- **Cùng wifi/LAN:** server in ra link dạng `http://192.168.x.x:3000` — gửi link đó cho bạn bè. Giữ cửa sổ chạy server mở suốt lúc chơi.
-- **Qua Internet:** trên Windows bấm đúp **`choi-online.cmd`**, hoặc chạy `npm run online` (= `node server.js --online`) — chỉ cần một cửa sổ. Server tự bật tunnel Cloudflare và in ra link `https://....trycloudflare.com`; nút **Copy link mời** trong phòng cũng copy link này. Dùng `cloudflared` nếu máy đã cài, không thì tự tải qua `npx` (lần đầu hơi lâu). Tắt server là tunnel tắt theo; mỗi lần chạy sẽ có link mới.
+- **Same Wi-Fi / LAN:** the server prints a local URL like `http://192.168.x.x:3000` — share it with friends. Keep the server terminal open while playing.
+- **Over the Internet:** on Windows, double-click **`choi-online.cmd`**, or run `npm run online` (`node server.js --online`) in a single terminal. The server automatically launches a Cloudflare quick tunnel and prints a `https://....trycloudflare.com` URL; the in-room **Copy invite link** button uses this URL too. Uses local `cloudflared` if installed, otherwise fetches it via `npx` (the first run may take a moment). Closing the server closes the tunnel; each run generates a fresh URL.
 
-Trong phòng có **chat** 💬 ở góc dưới-trái (bấm hoặc nhấn Enter): dùng được cả lúc chờ lẫn lúc đang chơi, tin nhắn hiện thành bong bóng trên ghế người gửi. Nút **đàm thoại** 🎙️ ngay trên đó để nói chuyện bằng mic (bấm lần nữa hoặc phím M để tắt/bật mic; rời hoặc tắt tiếng từng người trong khung chat). Đàm thoại cần mở bằng link online (https) hoặc localhost — trình duyệt chặn mic trên link wifi/LAN (http).
+### Chat, Voice & Room Controls
 
-Riêng 🛸 Kẻ Mạo Danh làm giống bản gốc: người còn sống chỉ chat được trong cuộc họp, hồn ma (và người xem, Thầy Đồng) có kênh 👻 riêng; đàm thoại mặc định *theo khoảng cách* — chỉ nghe rõ người đứng gần, người chết thì im (đổi được trong tuỳ chọn ván).
+- **Chat 💬** (bottom-left corner, click or press `Enter`): works both in the lobby and during matches, with floating speech bubbles above the sender's seat.
+- **Voice Chat 🎙️** (right above the chat button): click to join voice, click again or press `M` to mute/unmute; leave or mute individual players inside the chat panel. Requires `https` (online link) or `localhost` — browsers block microphone access on plain `http` LAN links.
+- In 🛸 **Impostor (*Kẻ Mạo Danh*)**, living players can only chat during meetings, while ghosts (and spectators/Medium) share a dedicated 👻 channel; voice chat defaults to *proximity-based* (only hear nearby players, dead players are muted — configurable in match options).
+- In 🕵️ **Codenames (*Mật Danh*)**, Spymasters can only chat with other Spymasters during a match (to prevent leaking clues) — voice chat is unmoderated, so play on the honor system.
+- Refreshing (`F5`) or disconnecting automatically reconnects you to your exact seat. If a turn timer expires or a player disconnects, the server's bot plays on their behalf. Each browser tab acts as an independent player (handy for local testing).
+- The host can **kick** players via 🚪 *Kick* in the seat dropdown or `✕` next to a spectator's name. Kicked players wait 2 minutes before rejoining that room. Players in an active match must be returned to the lobby first.
+- **Seasonal Christmas Theme 🎄**: a light holiday layer (toggle `🎄 Noel` in the corner of the home card, saved in `localStorage.hub_xmas`) — fairy lights, snowy hills with pines and a snowman, a passing reindeer sleigh and gentle CSS snowfall behind the home screen, lobby and leaderboard; in games, lights + snow around the table and a snowflake-patterned pine felt on card tables.
 
-Trong 🕵️ Mật Danh, Trưởng nhóm chỉ chat được với các Trưởng nhóm khác suốt ván (để khỏi mách đồng đội) — đàm thoại thì không chặn được, cả bàn tự giữ luật nhé.
+### 🏆 Accounts, Avatars, Leaderboard & Cosmetics Shop
 
-F5 hoặc rớt mạng thì tự vào lại đúng ghế. Hết giờ lượt hoặc mất kết nối thì máy tự đi giúp. Mỗi tab trình duyệt là một người chơi riêng (tiện để tự test).
+- **Accounts:** sign in on the home screen with a username + 4–8 digit PIN. First-time users click *Create account*; sessions persist per device. You can still play without signing in as a **guest** (marked with a "guest" badge and excluded from rankings).
+- **🖼️ Avatars** (requires account, free): click the circle next to your name on the home screen or your seat badge in the lobby → select/paste/drop an image, pan, zoom, rotate, and Save. Update or remove anytime, even mid-match — everyone sees it immediately. Shown in the lobby, chat, leaderboard, and all games (in *Impostor*, only on voting cards & end screens so Shapeshifter/Disguise isn't spoiled).
+- **Ratings & Leaderboard:** matches with **at least 2 signed-in players** played to completion are recorded. Each match awards a **score from −1 to +1** based on how many signed-in opponents you outranked (+1 first, −1 last, normalized across table sizes). Longer matches carry more weight based on real duration: `1×` per 10 minutes (rounded to 0.5), clamped to `×1…×3` (e.g., 3-min UNO = `×1`, 30-min Monopoly = `×3`). Your **Rating** (−100 to +100) is the weighted average with a 3-draw Bayesian prior so lucky streaks don't skew the top. Positive = winning, negative = losing. Bots and guests can play freely without affecting ratings.
+- **`/report` Page** (🏆 button on home & lobby): filterable leaderboard (7/14/30 days or custom range, per-game filter), head-to-head matrix, recent matches, and aborted-match counts. URL query params preserve filters for easy sharing.
+- **Credits & 🛍️ Cosmetics Shop:** every recorded match awards credits to all signed-in participants: **`15 × duration weight`** (`×1…×3`), **`×1.5` for 1st place**, capped at **300 credits/day** (Vietnam time). Aborted matches grant 0 credits. Credits unlock purely **cosmetic items** (avatar frames, animated name effects, titles, chat bubbles, win effects, emote packs; plus in-game cosmetics: card backs for UNO/Exploding Kittens/Coup, dice skins for Ludo/Monopoly, hats for Impostor, easel frames for Draw & Guess) — **zero pay-to-win**, seat colors remain unchanged. Credits are computed directly from match history, so existing players automatically have credits available.
+- **Data Storage:** stored in `data/` next to `server.js` (gitignored): **`hub.db`** (SQLite: accounts, match history, wallets/cosmetics) + `avatars/`. Legacy JSON files (`accounts.json`, `matches.jsonl`, `wallet.json`) are automatically migrated into `hub.db` on first launch and removed. Back up `hub.db` while the server is stopped to preserve history. Override the data path with `HUB_DATA=<dir>`.
 
-Chủ phòng **mời người khác ra** được: chọn 🚪 *Mời ra* ở menu của ghế đó, hoặc bấm ✕ cạnh tên người đang xem. Người bị mời ra phải chờ 2 phút mới vào lại phòng đó được. Người đang chơi giữa ván thì phải về phòng chờ trước mới mời ra được.
+### ⚙️ Scaling & Performance
 
-### 🏆 Đăng nhập & bảng xếp hạng
+The hub automatically spawns **one room worker process per CPU core** (`HUB_WORKERS=<n>` to override, `1` for single-process). Each room lives completely inside one worker (sharded by room code). The primary process accepts sockets and hands them off to the target worker; shared state lives in `hub.db`. Game states are broadcast as **JSON deltas**, cutting bandwidth to ~15–25% of full state for real-time and typical turn-based games. The leaderboard runs on a background worker thread, cached for 30s, serving the top 200 players.
 
-- **Đăng nhập** ở trang chủ bằng tên + mã PIN 4–8 số. Lần đầu bấm *Tạo tài khoản*; mỗi máy nhớ đăng nhập. Không đăng nhập vẫn chơi được, nhưng chỉ là **khách** (có nhãn "khách" trên ghế) và không được tính điểm.
-- **🖼️ Ảnh đại diện** (cần đăng nhập, miễn phí): bấm vòng tròn cạnh tên ở trang chủ, hoặc chấm ghế của mình ở phòng chờ → chọn/dán/kéo thả ảnh, kéo để căn, phóng to, xoay rồi Lưu. Đổi lại hoặc xoá lúc nào cũng được, kể cả giữa ván — cả phòng thấy ngay. Ảnh hiện ở phòng chờ, chat, bảng xếp hạng và trong mọi game (Kẻ Mạo Danh: chỉ ở thẻ bỏ phiếu + bảng kết quả, không hiện trên bản đồ để Biến Hình/Ngụy Trang không bị lộ).
-- Ván có **ít nhất 2 người đã đăng nhập** chơi đến hết thì được ghi lại. Mỗi ván cho **điểm từ −1 đến +1** theo việc bạn xếp trên bao nhiêu phần trăm số người cùng bàn (nhất +1, bét −1, bàn đông hay vắng cũng vậy). Ván dài được tính nặng hơn theo thời lượng thật: cứ 10 phút là ×1 (làm tròn 0.5), từ ×1 tới ×3 — ván UNO 3 phút ×1, Cờ Tỷ Phú 30 phút ×3. **Chỉ số** xếp hạng (−100 đến +100) là trung bình có trọng số các ván, cộng thêm 3 ván hoà ảo để vài ván ăn may không vọt lên đầu — xếp theo trung bình nên vắng vài buổi không thiệt cũng không lợi. Dương là đang thắng, âm là đang thua. Bot và khách vẫn chơi cùng được nhưng không có điểm.
-- Trang **`/report`** (nút 🏆 ở trang chủ và trong phòng): bảng xếp hạng theo 7/14/30 ngày hoặc khoảng ngày tuỳ chọn, lọc theo từng game, bảng đối đầu (ai thắng ai), các ván gần đây, và số ván bị chủ phòng bỏ dở giữa chừng. Link giữ nguyên bộ lọc nên gửi cho cả nhóm xem cùng một kỳ được.
-- **Credit & 🛍️ Cửa hàng**: mỗi ván được ghi lại, ai đã đăng nhập cũng nhận credit — thắng hay thua đều có: **15 × trọng số thời lượng** (×1…×3 như trên), **nhất bàn ×1.5**, tối đa **300 credit mỗi ngày**. Ván bỏ dở thì không ai được, không ai bị trừ. Credit dùng mua **đồ trang trí** (khung ảnh, hiệu ứng tên, danh hiệu, khung chat, hiệu ứng thắng, gói biểu cảm; trong game: lưng bài cho UNO/Mèo Nổ/Coup, xúc xắc cho Cờ Cá Ngựa/Cờ Tỷ Phú, mũ cho Kẻ Mạo Danh, khung tranh cho Vẽ Đoán) — chỉ để khoe, **không ảnh hưởng thắng thua**, màu ghế trong game giữ nguyên. Đồ hiện ở phòng chờ, khung chat, bảng xếp hạng; hiệu ứng thắng cả phòng thấy khi bạn nhất bàn. Credit tính lại từ lịch sử ván nên người chơi cũ có sẵn credit.
-- Dữ liệu nằm trong thư mục **`data/`** cạnh `server.js` (không vào git): **`hub.db`** (SQLite: tài khoản, lịch sử ván, ví/đồ đã mua) + `avatars/`. Lần đầu chạy bản mới, hub tự chuyển các file JSON của bản cũ (`accounts.json`, `matches.jsonl`, `wallet.json`) vào `hub.db` rồi xoá chúng. Muốn giữ lịch sử thì luôn chạy hub trên cùng một máy và thỉnh thoảng sao lưu thư mục này (chép `hub.db` lúc server đang tắt). Đổi chỗ lưu bằng `HUB_DATA=<thư mục>`.
+- `GET /api/health`: per-worker room/connection counts, CPU %, event-loop lag, and memory usage.
+- `node tools/load.js <game> [rooms] [players/room] [seconds] [port]`: spins up bot-filled rooms for load testing. Benchmarked on an i7-1260P laptop: 500 *Impostor* rooms (5,000 players + bots, 2,000 connections) across 8 workers at ~80% per core and ~40ms p99 latency.
+- Vertically scales with CPU cores on a single host; multi-host scaling would require an external room-code router (not yet implemented).
 
-### ⚙️ Chạy cho đông người
+## Azure Deployment (CI/CD)
 
-Hub tự chạy **mỗi lõi CPU một tiến trình phòng** (`HUB_WORKERS=<n>` để đổi, `1` = một tiến trình). Mỗi phòng nằm trọn trong một tiến trình (chọn theo mã phòng). Tiến trình chính chỉ nhận kết nối rồi chuyển cho đúng tiến trình, dữ liệu dùng chung nằm trong `hub.db`. Trạng thái ván gửi dạng **chỉ phần thay đổi** (delta), bằng ~15–25% dung lượng gửi nguyên trạng thái với game real-time và game theo lượt điển hình. Bảng xếp hạng tính ở luồng nền, nhớ 30 giây, hiện 200 người đứng đầu.
+Production runs on **Azure Container Apps** (Consumption plan, Australia East): scales to zero when idle (~free, ~10–20s cold start for the first player). Max 1 replica since active rooms live in RAM. At 0.25 vCPU, it runs a single process (`HUB_WORKERS=1`). Server `data/` is mounted on an **Azure Files share** (`hubdata` at `/app/data`) so accounts, match history, and wallets persist across deploys. Because SMB shares do not support SQLite WAL or byte-range locks reliably, `HUB_DB_WAL=0` is set and the share is mounted with `nobrl`.
 
-- `GET /api/health`: số phòng/kết nối, % CPU, độ trễ vòng lặp sự kiện, RAM của từng tiến trình.
-- `node tools/load.js <game> [số phòng] [người/phòng] [giây] [port]`: mở hàng loạt phòng có bot để đo tải. Đo trên laptop i7-1260P: 500 phòng Kẻ Mạo Danh (5.000 người + bot, 2.000 kết nối) chạy trên 8 tiến trình, mỗi tiến trình ~80% một lõi, độ trễ p99 ~40ms. Bản một tiến trình cũ bão hoà ở mức đó và chỉ phát được ~1/3 số tin.
-- Trên một máy, tải tăng theo số lõi. Quá sức một máy thì cần thêm máy và một bộ định tuyến theo mã phòng (chưa làm).
+GitHub Actions workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
+- **Every push/PR to `main`**: runs bot simulations (`simulate`, 3 matches per game), builds the Docker image, starts the container, and runs WebSocket `smoke` tests.
+- **Push to `main`** (or manual *Run workflow*): pushes the image to `ghcr.io/truong0996/gamehub`, authenticates to Azure via OIDC (managed identity, no stored secrets), creates/updates the app from [`deploy/containerapp.yaml`](deploy/containerapp.yaml), and verifies `https://…/` and `/api/report`. Redeploying restarts the container, clearing active in-RAM rooms (accounts & history are preserved).
 
-## Triển khai lên Azure (CI/CD)
+First-time infrastructure provisioning: `az login` to the target subscription → `bash deploy/azure-setup.sh` (creates resource group, storage + share, environment, managed identity) → set the 3 Actions variables `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` printed by the script → push. The `gamehub` package on `ghcr.io` must be **Public** so Azure can pull without credentials.
 
-Bản online chạy trên **Azure Container Apps** (gói consumption, vùng Australia East — policy của subscription chỉ cho phép vùng này): không ai chơi thì app ngủ (gần như miễn phí), người đầu tiên vào phải chờ ~10–20s. Tối đa 1 bản chạy vì phòng nằm trong RAM. Với 0.25 vCPU, bản này chạy 1 tiến trình (`HUB_WORKERS=1`). Thư mục `data/` của server là một **Azure Files share** (`hubdata`) gắn vào `/app/data`, nên tài khoản, lịch sử ván và ví giữ nguyên qua các lần deploy. Ổ mạng SMB không hỗ trợ chế độ WAL của SQLite nên đặt `HUB_DB_WAL=0`, và share được gắn với `nobrl` (SMB không chuyển được khoá byte-range của SQLite → "database is locked").
+Useful commands:
+- Stream logs: `az containerapp logs show -g rg-celestials-hub -n celestials-hub --follow`
+- Download data backup: `az storage file download-batch -s hubdata -d <dir> --account-name <storage>`
 
-Workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
-- **Mọi push/PR vào `main`**: mô phỏng mọi game bằng bot (`simulate`, 3 ván mỗi game), build Docker image, chạy container rồi `smoke` qua WebSocket.
-- **Push vào `main`** (hoặc chạy tay *Run workflow*): đẩy image lên `ghcr.io/truong0996/gamehub`, đăng nhập Azure bằng OIDC (managed identity, không lưu mật khẩu), tạo/cập nhật app theo [`deploy/containerapp.yaml`](deploy/containerapp.yaml), rồi kiểm tra `https://…/` và `/api/report`. Deploy khởi động lại app nên phòng đang chơi sẽ mất (tài khoản + lịch sử vẫn còn).
+## Development
 
-Dựng lại hạ tầng từ đầu (một lần): `az login` đúng subscription → `bash deploy/azure-setup.sh` (tạo resource group, storage + share, environment, managed identity; lần đầu chép `data/` ở máy đang chạy lên share) → đặt 3 biến Actions `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` mà script in ra → push. Package `gamehub` trên ghcr.io phải để **Public** để Azure kéo image không cần mật khẩu.
-
-Xem log: `az containerapp logs show -g rg-celestials-hub -n celestials-hub --follow`. Tải dữ liệu về máy: `az storage file download-batch -s hubdata -d <thư mục> --account-name <storage>`.
-
-## Phát triển
-
-Mỗi game là một thư mục trong `games/`. Cách thêm game mới, interface và giao thức: xem **[CLAUDE.md](CLAUDE.md)**.
+Every game is a self-contained plugin under `games/<dir>/`. See **[CLAUDE.md](CLAUDE.md)** for architecture details, the server/client game plugin interface, and WebSocket protocol documentation.
 
 ```bash
-HUB_DEV=1 node server.js                 # hiện cả game mẫu games/_template
-node tools/simulate.js cocangua 50        # mô phỏng 50 ván toàn bot (thêm players=3 để thử 3 người)
-node tools/smoke.js cocangua 3000         # kiểm tra đầu-cuối với server đang chạy (Node 22+)
+HUB_DEV=1 node server.js                 # also show sample template game games/_template
+node tools/simulate.js cocangua 50        # simulate 50 all-bot matches (add players=3 for 3 players)
+node tools/smoke.js cocangua 3000         # end-to-end WebSocket smoke test against a running server (Node 22+)
 ```

@@ -1,0 +1,63 @@
+/* Theme Giáng Sinh — một lớp phủ nhẹ lên "Bàn gỗ dịu": giữ nguyên bố cục, màu ghế và các biến màu chính, chỉ thêm
+   dây đèn, đồi tuyết, cây thông, người tuyết, tuyết rơi phía sau mọi thứ (không bao giờ che chữ, nút, bàn chơi).
+   Trong ván: lớp nền chỉ còn dây đèn + nửa số bông tuyết (lộ ra ở khoảng trống quanh bàn), và bàn nỉ của các game
+   (dùng chung biến --felt) thành nỉ xanh thông có hoa văn bông tuyết — không cần CSS riêng cho từng game.
+   Bật khi html[data-theme="xmas"] (xmas.js); html[data-screen] do show() trong hub.js gắn. Animation chạy mãi chỉ đụng transform/opacity. */
+html[data-theme="xmas"] { --xm-red: #b8453a; --xm-pine: #3f6656; background: linear-gradient(#e3e8e9, var(--bg) 55%);
+  --felt: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><g stroke='%23fff' stroke-opacity='.06' stroke-width='1.5' stroke-linecap='round' fill='none'><path d='M30 18v24M19.6 24l20.8 12M40.4 24L19.6 36'/><path d='M88 74v20M79.3 79l17.4 10M96.7 79l-17.4 10'/></g><g fill='%23fff' fill-opacity='.09'><circle cx='92' cy='26' r='1.6'/><circle cx='26' cy='92' r='1.4'/></g></svg>") 0 0 / 170px,
+    radial-gradient(ellipse at center, #3f7258 0%, #2c5644 70%, #23473a 100%); }
+html[data-theme="xmas"] body { background: transparent; }   /* để lớp #xm (z-index −1) nằm giữa nền html và nội dung */
+
+/* ---------- lớp nền #xm ---------- */
+#xm { display: none; position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+html[data-theme="xmas"] #xm { display: block; }
+/* trong ván: bỏ cảnh dưới đất + xe tuần lộc (đỡ rối mắt), tuyết còn một nửa */
+html[data-screen="game"] :is(.xm-ground, .xm-sleigh, #xm > i:nth-child(2n)) { display: none; }
+html[data-screen="game"]:has(#game-root > .mdn) #xm { display: none; }   /* Kẻ Mạo Danh phủ kín màn hình nền tối — không vẽ uổng */
+
+/* dây đèn mép trên: lớp nền = dây + bóng tắt; ::before/::after = 2 nhóm bóng sáng, thay nhau mờ/tỏ */
+.xm-lights, .xm-lights::before, .xm-lights::after { position: absolute; top: 0; left: 0; right: 0; height: 26px; background-repeat: repeat-x; background-size: 120px 26px; }
+.xm-lights { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 26'><path d='M0 3Q30 15 60 3Q90 15 120 3' fill='none' stroke='%236b5a48' stroke-width='1.4'/><g fill='%236b5a48'><rect x='13' y='7' width='4' height='3' rx='1'/><rect x='43' y='7' width='4' height='3' rx='1'/><rect x='73' y='7' width='4' height='3' rx='1'/><rect x='103' y='7' width='4' height='3' rx='1'/></g><ellipse cx='15' cy='14' rx='3.5' ry='5' fill='%23963a31'/><ellipse cx='45' cy='14' rx='3.5' ry='5' fill='%23b08530'/><ellipse cx='75' cy='14' rx='3.5' ry='5' fill='%232f6a52'/><ellipse cx='105' cy='14' rx='3.5' ry='5' fill='%233d6585'/></svg>"); }
+.xm-lights::before, .xm-lights::after { content: ''; animation: xm-blink 1.8s ease-in-out infinite alternate; }
+.xm-lights::before { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 26'><ellipse cx='15' cy='14' rx='3.5' ry='5' fill='%23e0675a'/><ellipse cx='75' cy='14' rx='3.5' ry='5' fill='%235fb08a'/><circle cx='14' cy='12' r='1.2' fill='%23fff' opacity='.8'/><circle cx='74' cy='12' r='1.2' fill='%23fff' opacity='.8'/></svg>"); }
+.xm-lights::after { animation-delay: -1.8s; background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 26'><ellipse cx='45' cy='14' rx='3.5' ry='5' fill='%23f0c55a'/><ellipse cx='105' cy='14' rx='3.5' ry='5' fill='%2378a7d0'/><circle cx='44' cy='12' r='1.2' fill='%23fff' opacity='.8'/><circle cx='104' cy='12' r='1.2' fill='%23fff' opacity='.8'/></svg>"); }
+@keyframes xm-blink { from { opacity: .15; } to { opacity: 1; } }
+
+/* đồi tuyết + cụm thông (trái) + người tuyết (phải), vẽ tĩnh */
+.xm-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 190px; background:
+  url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'><defs><g id='t'><path d='M0 0L34 46H20L46 84H28L58 126H-58L-28 84H-46L-20 46H-34Z'/><rect x='-7' y='126' width='14' height='16' fill='%238b6243'/></g></defs><use href='%23t' transform='translate(150 78) scale(.62)' fill='%234f7a66'/><use href='%23t' transform='translate(70 26)' fill='%233f6656'/><path d='M70 12l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z' fill='%23d9a23a'/><g fill='%23b8453a'><circle cx='58' cy='92' r='4'/><circle cx='88' cy='118' r='4'/><circle cx='52' cy='136' r='4'/></g><g fill='%23d9a23a'><circle cx='80' cy='80' r='3.5'/><circle cx='66' cy='112' r='3.5'/><circle cx='96' cy='142' r='3.5'/></g></svg>") left max(8px, 3vw) bottom 20px / 180px auto no-repeat,
+  url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 130'><g fill='%23fbfaf7' stroke='%23cfd6da' stroke-width='2'><circle cx='45' cy='98' r='28'/><circle cx='45' cy='56' r='20'/></g><path d='M28 70Q45 80 62 70' stroke='%23b8453a' stroke-width='7' fill='none' stroke-linecap='round'/><path d='M56 72L62 92' stroke='%23b8453a' stroke-width='6' stroke-linecap='round'/><rect x='30' y='34' width='30' height='5' rx='2' fill='%232a2723'/><rect x='35' y='14' width='20' height='22' rx='2' fill='%232a2723'/><g fill='%232a2723'><circle cx='39' cy='52' r='2'/><circle cx='51' cy='52' r='2'/><circle cx='45' cy='92' r='2.5'/><circle cx='45' cy='104' r='2.5'/></g><path d='M45 57L60 60L45 62Z' fill='%23d27a2c'/></svg>") right max(12px, 4vw) bottom 26px / 78px auto no-repeat,
+  url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'><path d='M0 40Q180 10 400 34T800 30T1200 36V90H0Z' fill='%23e3e8ea'/><path d='M0 62Q300 36 620 58T1200 52V90H0Z' fill='%23f6f7f6'/></svg>") bottom / 100% 90px no-repeat; }
+
+/* xe tuần lộc thỉnh thoảng bay ngang trời (bay ~22s, nghỉ ~28s) */
+.xm-sleigh { position: absolute; top: 64px; left: 0; font-size: 22px; white-space: nowrap; opacity: .75; transform: translate3d(100vw, 0, 0); animation: xm-fly 50s linear infinite; }
+@keyframes xm-fly { 0% { transform: translate3d(100vw, 0, 0); } 45%, 100% { transform: translate3d(-120px, -30px, 0); } }
+
+/* bông tuyết: --x vị trí, --s cỡ, --w trôi ngang, --d thời gian rơi, --t lệch pha (xmas.js gán ngẫu nhiên) */
+#xm > i { position: absolute; top: -10px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: #fff;
+  box-shadow: 0 0 0 1px rgba(110, 130, 150, .18); animation: xm-fall var(--d) linear var(--t) infinite; }
+@keyframes xm-fall { to { transform: translate3d(var(--w), 105vh, 0); } }
+
+@media (max-width: 640px) {
+  .xm-ground { height: 130px; background-size: 120px auto, 54px auto, 100% 64px; }
+  .xm-sleigh { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #xm > i, .xm-sleigh { display: none; }
+  .xm-lights::before, .xm-lights::after { animation: none; }
+}
+
+/* ---------- điểm xuyết trên thẻ ---------- */
+/* viền kẹo gậy mảnh ở mép trên thẻ trang chủ & phòng chờ */
+html[data-theme="xmas"] :is(.home, .room).card { border-top: 4px solid transparent;
+  background: linear-gradient(var(--surface), var(--surface)) padding-box, repeating-linear-gradient(-45deg, var(--xm-red) 0 8px, var(--surface) 8px 14px) border-box; }
+/* nhành nhựa ruồi góc trên-trái thẻ trang chủ */
+html[data-theme="xmas"] .home.card::before { content: ''; position: absolute; top: 10px; left: 12px; width: 46px; height: 30px;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 30'><path d='M2 10Q10 2 22 12Q12 20 2 10Z' fill='%233f6656'/><path d='M44 6Q34 0 24 12Q36 18 44 6Z' fill='%234f7a66'/><g fill='%23b8453a'><circle cx='21' cy='16' r='4'/><circle cx='28' cy='18' r='3.6'/><circle cx='24' cy='23' r='3.4'/></g></svg>") center / contain no-repeat; }
+html[data-theme="xmas"] .title::after { width: 96px; background: linear-gradient(90deg, var(--xm-pine) 0 33%, var(--accent) 33% 67%, var(--xm-red) 67%); }
+html[data-theme="xmas"] .room-top > span:first-child::before { content: '🎄 '; }
+html[data-theme="xmas"] .rp-head h1::after { content: ' 🎄'; }
+
+/* nút bật/tắt (góc trên-phải thẻ trang chủ, hiện cả khi đang tắt để bật lại) */
+#xm-toggle { position: absolute; top: 10px; right: 10px; padding: 4px 10px; font-size: 12px; opacity: .7; }
+html[data-theme="xmas"] #xm-toggle { opacity: 1; border-color: color-mix(in srgb, var(--xm-red) 35%, var(--line)); }
