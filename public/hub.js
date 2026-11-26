@@ -744,25 +744,29 @@ $('#btn-rank').onclick = () => open('/report', '_blank');
 $('#btn-shop').onclick = () => { sfx.pop(); openShop(); };
 $('#btn-ach').onclick = () => { sfx.pop(); openAchievements(); };
 
-const WHATS_NEW_VER = '2026-11-26-2';
+const WHATS_NEW_VER = '2026-11-26-3';
 const WHATS_NEW = [
   {
     tag: 'Mới',
+    title: '🎄 Giao diện Giáng Sinh toàn trang (Mặc định bật)',
+    desc: 'Phủ sắc Giáng Sinh đồng bộ từ trang chủ, phòng chờ, chat, hộp thoại đến bảng xếp hạng (/report) với dây đèn, tuyết rơi, nhà gỗ ấm & người tuyết, cùng bàn nỉ bông tuyết; chuyển đổi nhanh giữa 🎄 Noel và 🌿 Mộc.',
+  },
+  {
+    tag: 'Mới',
+    title: '🎁 Bộ sưu tập Giáng Sinh & Tổng hợp 7 Bộ sưu tập',
+    desc: 'Thêm 11 vật phẩm Giáng Sinh mới vào Cửa hàng (Khung ảnh, Hiệu ứng tên, Combo tuyết rơi, Khung chat, Lưng bài, Xúc xắc, Khung tranh, Gói biểu cảm, hiệu ứng thắng Bão Tuyết Noel & Ông Già Noel, 2 mũ Sừng Tuần Lộc & Mũ Ông Già Noel) và gom đủ 7 bộ sưu tập kèm nút 👗 Thử cả bộ.',
+  },
+  {
     title: '🎖️ Hệ thống Thành tựu & 25 Danh hiệu riêng',
     desc: 'Danh hiệu chuyển từ Cửa hàng sang Thành tựu: hoàn thành 11 thành tựu Chung và 17 thành tựu Cờ Cá Ngựa để nhận xu thưởng (không tính vào giới hạn ngày) cùng các danh hiệu mang hiệu ứng riêng biệt.',
   },
   {
-    tag: 'Mới',
     title: '🪪 Thẻ Đổi Tên (Giảm 99% thẻ đầu)',
     desc: 'Mở bán Thẻ Đổi Tên trong tab 🎟️ Tiện ích của Cửa hàng (1.000 💰, thẻ đầu tiên chỉ 10 💰). Chỉ có thể đổi tên tài khoản khi đang sở hữu thẻ.',
   },
   {
-    title: '🎨 Nâng cấp & Làm mới Cửa hàng (Hoàn 100% xu)',
-    desc: 'Cửa hàng được làm mới hoàn toàn — toàn bộ xu bạn đã tiêu trước đây đã được hoàn trả 100% để mua sắm lại từ đầu; làm mới xúc xắc Hoả Diệm, xem trước khung ảnh trên ảnh đại diện và tinh chỉnh giao diện màn hình chính.',
-  },
-  {
-    title: '🎄 Giao diện Giáng Sinh & Cân bằng phần thưởng',
-    desc: 'Thêm chế độ Noel (dây đèn, tuyết rơi, bàn nỉ bông tuyết), tự động xáo vị trí ghế mỗi ván trong game theo lượt (màu ghế đi theo người chơi) và nâng credit cơ bản từ 10 lên 15.',
+    title: '🎨 Nâng cấp Cửa hàng & Cân bằng phần thưởng',
+    desc: 'Hoàn trả 100% xu cũ để mua sắm lại từ đầu, làm mới xúc xắc Hoả Diệm, xem trước khung ảnh trên avatar, tự động xáo vị trí ghế mỗi ván theo lượt và nâng credit cơ bản từ 10 lên 15.',
   },
 ];
 const wnBtn = $('#btn-whatsnew');
