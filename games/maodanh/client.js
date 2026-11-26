@@ -16,7 +16,7 @@ const colOf = l => (l >= 0 ? COLORS[l].color : '#8b9099');
 const nameOfLook = l => (l >= 0 ? (V.names[l] || COLORS[l].name) : '???');
 // Mũ (đồ mua ở cửa hàng) của hình dạng l = mũ của người ghế l — nên Biến Hình/Hoá Trang mang theo mũ, Ngụy Trang (-1) thì không có.
 const hatOf = l => (l >= 0 && CTX ? CTX.skin.hat(l) : null);
-const pn = (l, txt) => `<b class="pn" style="--c:${colOf(l)}">${esc(txt ?? nameOfLook(l))}</b>`;
+const pn = (l, txt) => (CTX ? CTX.skin.name(l, txt ?? nameOfLook(l), colOf(l)) : `<b class="pn" style="--c:${colOf(l)}">${esc(txt ?? nameOfLook(l))}</b>`);
 const secs = t => Math.max(0, Math.ceil((t - srvNow()) / 1000));
 const mySeat = () => (V ? V.me : -1);
 const S = () => V && V.self;
@@ -671,7 +671,7 @@ function paintMeet() {
     <div class="mt-grid">${seats.map(({ n, i }) => {
       const dead = V.dead[i], voted = m.voted.includes(i);
       return `<button class="mt-card${dead ? ' dead' : ''}${i === mySeat() ? ' me' : ''}" data-s="${i}" ${!canVote || dead || i === mySeat() ? 'disabled' : ''}>
-        ${beanTag(i, '', false)}<span class="nm">${CTX.skin.face(i)}${pn(i, n)}${V.bots[i] ? ' 🤖' : ''}</span>${dead ? '<span class="x">✖</span>' : ''}${voted ? '<span class="vd">✅ đã bỏ phiếu</span>' : ''}
+        ${beanTag(i, '', false)}<span class="nm">${CTX.skin.face(i)}${pn(i, n)}${CTX.skin.title(i)}${V.bots[i] ? ' 🤖' : ''}</span>${dead ? '<span class="x">✖</span>' : ''}${voted ? '<span class="vd">✅ đã bỏ phiếu</span>' : ''}
         ${m.by === i ? '<span class="mg">📢</span>' : ''}</button>`;
     }).join('')}</div>
     <div class="mt-foot"><button class="ghost" data-skip ${canVote ? '' : 'disabled'}>⏭️ Bỏ qua (không vote ai)</button>
@@ -747,7 +747,7 @@ function showOver() {
   const T = w.team === 'neutral' ? { name: 'Kẻ Ngốc', color: TEAMS.neutral.color } : TEAMS[w.team];
   const rows = V.names.map((n, i) => (n ? i : -1)).filter(i => i >= 0).map(i => {
     const R = ROLES[V.roles[i]];
-    return `<div class="or${w.seats.includes(i) ? ' win' : ''}">${beanTag(i, '', V.dead[i])}${CTX.skin.face(i)}${pn(i, V.names[i])}<span>${R.icon} ${esc(R.name)}${V.lovers && V.lovers[i] != null ? ' 💞' : ''}</span>${w.seats.includes(i) ? '🏆' : ''}</div>`;
+    return `<div class="or${w.seats.includes(i) ? ' win' : ''}">${beanTag(i, '', V.dead[i])}${CTX.skin.face(i)}${pn(i, V.names[i])}${CTX.skin.title(i)}<span>${R.icon} ${esc(R.name)}${V.lovers && V.lovers[i] != null ? ' 💞' : ''}</span>${w.seats.includes(i) ? '🏆' : ''}</div>`;
   }).join('');
   const host = CTX.me().isHost;
   const f = full(`<div class="fo"><div class="big" style="color:${T.color}">${mine ? '🏆 CHIẾN THẮNG!' : s ? '😵 THẤT BẠI' : '🏁 Kết thúc'}</div>
@@ -760,7 +760,7 @@ function showOver() {
 }
 function showHelp() {
   const info = mapInfo();
-  UI.openModal(`<div class="help"><h2>🛸 Kẻ Mạo Danh — luật chơi</h2>
+  UI.openModal(`<div class="help"><h2>📖 Luật chơi — Kẻ Mạo Danh</h2>
     <h3>Mục tiêu</h3><ul><li><b>Phi Hành Đoàn</b>: làm xong mọi nhiệm vụ, hoặc bỏ phiếu đẩy hết Kẻ Mạo Danh ra ngoài.</li>
     <li><b>Kẻ Mạo Danh</b>: giết tới khi số Kẻ Mạo Danh bằng số người còn lại, hoặc để một sự cố nguy cấp (đồng hồ đỏ) hết giờ.</li></ul>
     <h3>Điều khiển</h3><ul><li>Đi: <b>WASD</b>/phím mũi tên, hoặc kéo trên màn hình (điện thoại).</li><li><b>E</b> dùng/làm nhiệm vụ · <b>R</b> báo cáo xác · <b>Q</b> giết · <b>F</b> kỹ năng · <b>G</b> vật phẩm · <b>X</b> phá hoại · <b>Tab</b> bản đồ (cả lúc họp) · <b>M</b> tắt mic.</li>
@@ -945,4 +945,5 @@ export default {
       },
     };
   },
+  help(ctx) { CTX = ctx; UI = ctx.ui; showHelp(); },
 };
