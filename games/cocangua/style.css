@@ -12,7 +12,7 @@
 .ccn #weather.w-tornado { background: conic-gradient(from 0deg, transparent, rgba(200,200,255,.35), transparent 30%, rgba(200,200,255,.35) 60%, transparent); animation: ccn-spin 1s linear infinite; }
 .ccn #weather.w-meteor { background: radial-gradient(circle, rgba(255,80,20,0) 30%, rgba(255,60,0,.35)); animation: ccn-pulseBg .5s ease-in-out infinite alternate; }
 .ccn #weather.w-quake { background: radial-gradient(circle, rgba(255,140,0,.2), transparent 70%); }
-.ccn #weather.w-festival { background: conic-gradient(#ff4d6d55, #ff9f1c55, #ffd23f55, #2ec76b55, #3a9bff55, #b06cff55, #ff4d6d55); animation: ccn-spin 3s linear infinite; }
+.ccn #weather.w-festival { background: conic-gradient(#e0313f55, #f06a1455, #eab80e55, #23b56255, #2a85f755, #9354eb55, #e0313f55); animation: ccn-spin 3s linear infinite; }
 @keyframes ccn-sweep { from { background-position: 100% 0; } to { background-position: -100% 0; } }
 @keyframes ccn-spin { to { transform: rotate(360deg); } }
 @keyframes ccn-pulseBg { to { opacity: .55; } }
@@ -21,7 +21,7 @@
 .ccn .cell { fill: rgba(255,255,255,.10); stroke: rgba(255,255,255,.32); stroke-width: 1.5; }
 .ccn .emo { text-anchor: middle; dominant-baseline: central; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; pointer-events: none; }
 .ccn .lbl { text-anchor: middle; dominant-baseline: central; font-weight: 800; paint-order: stroke; stroke: rgba(0,0,0,.6); stroke-width: 5px; pointer-events: none; }
-.ccn .lbl-out { stroke: rgba(251,250,247,.9); }
+.ccn .lbl-out { stroke: rgba(252,253,249,.92); }
 .ccn .horse .knight { font-size: 21px; fill: #fff; text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: rgba(0,0,0,.45); stroke-width: 2px; font-family: 'Segoe UI Symbol', 'DejaVu Sans', 'Noto Sans Symbols2', serif; pointer-events: none; }
 .ccn .horse .halo { fill: none; stroke: #fff; stroke-width: 3.5; opacity: 0; transform-box: fill-box; transform-origin: center; }
 .ccn .horse.sel { cursor: pointer; }
@@ -68,7 +68,15 @@
 .ccn .f5 { transform: rotateY(-90deg) translateZ(3.75cqw); }
 .ccn .f3 { transform: rotateX(90deg) translateZ(3.75cqw); }
 .ccn .f4 { transform: rotateX(-90deg) translateZ(3.75cqw); }
-.ccn #dice.golden .face { background: linear-gradient(145deg, #fff6c2, #f0b400); }
+.ccn #dice.golden::before { background: radial-gradient(circle, #ffe46b 0%, rgba(255,180,0,.45) 45%, transparent 72%); opacity: .88; }
+.ccn #dice.golden .face {
+  background: radial-gradient(circle at 38% 34%, #fffef0 0%, #ffe670 55%, #f59f00 100%);
+  box-shadow: inset 0 0 0 .28cqw rgba(255,255,255,.92), inset 0 0 .9cqw rgba(185,95,0,.35), 0 0 1.4cqw rgba(255,205,40,.8);
+}
+.ccn #dice.golden .face i.pip {
+  background: radial-gradient(circle at 35% 35%, #ff8585, #b8001f);
+  box-shadow: 0 0 0 .08cqw rgba(255,255,255,.7), 0 0 .45cqw rgba(255,60,60,.45);
+}
 .ccn #dice-mods { position: absolute; color: #fff; left: var(--cx, 50%); top: calc(var(--cy, 50%) + 5.6cqw); transform: translateX(-50%); font-size: 2cqw; font-weight: 800; white-space: nowrap; text-shadow: 0 2px 6px #000; pointer-events: none; }
 
 /* Banner */
@@ -76,22 +84,22 @@
   transition: opacity .2s, transform .4s cubic-bezier(.2,1.6,.4,1); }
 .ccn #banner.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 .ccn #banner .b-big { font-size: 6cqw; font-weight: 900; letter-spacing: .02em; -webkit-text-stroke: .22cqw rgba(0,0,0,.6); paint-order: stroke fill; text-shadow: 0 .5cqw 2cqw rgba(0,0,0,.7); line-height: 1.1; }
-.ccn #banner .b-small { font-size: 2.2cqw; margin-top: .8cqw; color: #fff; background: rgba(30,28,25,.8); display: inline-block; padding: .5cqw 1.8cqw; border-radius: 99px; }
+.ccn #banner .b-small { font-size: 2.2cqw; margin-top: .8cqw; color: #fff; background: rgba(26,38,31,.88); display: inline-block; padding: .5cqw 1.8cqw; border-radius: 99px; }
 
 /* Bảng người chơi & điều khiển */
 .ccn .side-left { padding-bottom: 114px; }  /* chừa góc dưới-trái cho nút đàm thoại 🎙️ + chat 💬 của hub */
 .ccn .side-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
 .ccn .side-head b { color: var(--primary); letter-spacing: .15em; }
-.ccn .pcard { position: relative; border-radius: 14px; padding: 9px 11px 11px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--c); border-left-color: oklch(from var(--c) min(l, .8) c h); transition: transform .2s, box-shadow .2s; }
-.ccn .pcard.active { background: color-mix(in srgb, var(--c) 14%, var(--surface)); box-shadow: 0 0 0 2px var(--c); box-shadow: 0 0 0 2px oklch(from var(--c) min(l, .8) c h); transform: translateX(4px); }
+.ccn .pcard { position: relative; border-radius: 14px; padding: 9px 11px 11px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--c); border-left-color: oklch(from var(--c) min(l, .72) c h); transition: transform .2s, box-shadow .2s; }
+.ccn .pcard.active { background: color-mix(in srgb, var(--c) 14%, var(--surface)); box-shadow: 0 0 0 2px var(--c); box-shadow: 0 0 0 2px oklch(from var(--c) min(l, .72) c h); transform: translateX(4px); }
 .ccn .p-top { display: flex; align-items: center; gap: 6px; font-weight: 700; }
-.ccn .p-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.ccn .p-name { flex: 1; min-width: 0; white-space: nowrap; }
 .ccn .tag { font-size: 10px; background: var(--ink); color: var(--surface); padding: 1px 6px; border-radius: 99px; }
 .ccn .p-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
 .ccn .p-cards { margin-top: 4px; font-size: 18px; min-height: 22px; letter-spacing: 2px; }
 .ccn .p-cards .muted { letter-spacing: normal; }
 .ccn .p-bar { height: 5px; border-radius: 9px; background: var(--chip); margin-top: 6px; overflow: hidden; }
-/* màu sáng (Trắng, Vàng) gần như trùng nền thanh → hạ độ sáng như viền trái thẻ */
+/* màu sáng (Vàng) gần như trùng nền thanh → hạ độ sáng như viền trái thẻ */
 .ccn .p-bar i { display: block; height: 100%; background: var(--c); background: oklch(from var(--c) min(l, .72) c h); border-radius: 9px; transition: width .5s; }
 .ccn .timer { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; overflow: hidden; border-radius: 0 0 14px 14px; }
 .ccn .timer i { display: block; height: 100%; width: 0; background: var(--ink); transition: width .25s linear; }
@@ -108,7 +116,7 @@
 .ccn .hcard:hover:not(:disabled) { filter: none; background: var(--chip); }
 .ccn .hcard.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .ccn .hcard.empty { opacity: .25; cursor: default; }
-.ccn #card-hint { font-size: 13px; color: #9a6a12; }
+.ccn #card-hint { font-size: 13px; color: var(--cta-d); }
 .ccn #log { flex: 1; min-height: 120px; overflow: auto; font-size: 13px; display: flex; flex-direction: column; gap: 4px; padding-right: 4px; }
 .ccn .log-item { padding: 4px 8px; border-radius: 8px; background: var(--chip); animation: ccn-logIn .3s ease-out; }
 @keyframes ccn-logIn { from { opacity: 0; transform: translateX(10px); } }
@@ -122,5 +130,8 @@
   .ccn #log { max-height: 220px; }
 }
 
-/* Ảnh đại diện (ctx.skin.face) trước tên */
-.ccn .p-top .hub-av { width: 26px; height: 26px; }
+/* Ảnh đại diện (ctx.skin.face) + danh hiệu trên thẻ người chơi */
+.ccn .p-top :is(.hub-av, .hub-avw) { width: 26px; height: 26px; margin-right: 1px; }
+.ccn .p-top .p-name .lk-nx { padding-right: 10px; }
+.ccn .p-ttl { margin: 2px 0 -1px; }
+.ccn .p-ttl .lk-ttl { margin-left: 0; font-size: 10px; line-height: 15px; }
