@@ -34,6 +34,7 @@ export function shardOf(code, shards) {
 
 // accounts (hub/accounts.js) + stats (hub/stats.js): có thì người chơi đăng nhập được và kết quả ván được ghi lại.
 // wallet (hub/wallet.js): credit sau mỗi ván + đồ trang trí (look) hiện cho cả phòng. avatars (hub/avatars.js): ảnh đại diện tải lên.
+// achievements (hub/achievements.js): chấm thành tựu khi hết ván hợp lệ (≥1 tài khoản), thưởng xu + danh hiệu.
 // Chạy nhiều tiến trình (server.js): tiến trình thứ `shard` trong `shards` chỉ giữ phòng có shardOf(mã) === shard;
 // onAcct(id) = báo các tiến trình khác rằng ảnh/đồ trang trí của tài khoản này vừa đổi (họ gọi hub.acctChanged(id)).
 export function createHub({ games, lanUrls = () => [], publicUrl = () => null, accounts = null, stats = null, wallet = null, avatars = null, achievements = null,
