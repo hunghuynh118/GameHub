@@ -2,13 +2,13 @@
 // hiệu ứng thắng, thông báo credit sau ván, bảng cửa hàng. Danh sách món + công thức ở shop-data.js (dùng chung với server).
 import { $, el, esc, pick, toast, openModal, closeModal, floatAt, spawn, burst, confetti, PALETTE } from './ui.js';
 import { sfx, tone } from './sfx.js';
-import { CREDIT, SLOTS, RARITY, ITEMS, ITEM, itemPrice } from './shop-data.js';
+import { CREDIT, SLOTS, COLLECTIONS, RARITY, ITEMS, ITEM, itemPrice } from './shop-data.js';
 import { TITLE } from './achievements-data.js';
 
 let W = null;      // ví của mình { credits, earned, today, cap, owned, eq } — null = chưa đăng nhập
 let O = null;      // { request(t, data) → Promise, name() → tên mình, avatar() → URL ảnh đại diện | null, loggedIn() → bool, onChange() }
 let paintShop = null;
-let tab = 'frame', tryOn = {};   // tab đang mở, đồ đang "thử" trong bảng cửa hàng (chưa mua)
+let tab = 'xmas', tryOn = {};   // tab đang mở, đồ đang "thử" trong bảng cửa hàng (chưa mua)
 
 export function initShop(o) { O = o; }
 export const myWallet = () => W;
@@ -40,6 +40,7 @@ const COMBO = {
   ocean: { icon: '🫧', name: 'Đại Dương', colors: ['#38c8ff', '#9fe1ff', '#fff'] },
   gold: { icon: '👑', name: 'Hoàng Kim', colors: ['#ffd23f', '#ffe999', '#fff'] },
   fire: { icon: '🔥', name: 'Hoả Diệm', colors: ['#ff4d00', '#ffb000', '#fff2a8'] },
+  xmas: { icon: '🎄', name: 'Giáng Sinh', colors: ['#c23b3b', '#276749', '#ffd23f', '#fff'] },
   rainbow: { icon: '🌈', name: 'Cầu Vồng', colors: PALETTE },
   galaxy: { icon: '🪐', name: 'Thiên Hà', colors: ['#00e5ff', '#7c4dff', '#ffe9a8', '#fff'] },
 };
@@ -131,6 +132,50 @@ export function drawHat(c, id, w, top, t = 0) {
       c.globalAlpha = a0 * (1 - p);
       c.beginPath(); c.arc(Math.sin(k * 2.3 + t * 3) * w * 0.3, top - w * (0.2 + p * 0.7), w * 0.035, 0, 7); c.fill();
     }
+  } else if (it.draw === 'santa') {
+    const sway = Math.sin(t * 3.5) * w * 0.06, y0 = top + w * 0.06;
+    c.shadowColor = 'rgba(255,70,70,.45)'; c.shadowBlur = w * 0.24;
+    // thân mũ đỏ cong rủ sang một bên
+    const gr = c.createLinearGradient(0, y0 - w * 0.6, 0, y0);
+    gr.addColorStop(0, '#e63946'); gr.addColorStop(1, '#9e1b24');
+    c.fillStyle = gr; c.strokeStyle = 'rgba(60,10,10,.7)'; c.lineWidth = Math.max(1, w * 0.045);
+    c.beginPath();
+    c.moveTo(-w * 0.44, y0);
+    c.quadraticCurveTo(-w * 0.22, y0 - w * 0.56, w * 0.14 + sway * 0.5, y0 - w * 0.54);
+    c.quadraticCurveTo(w * 0.48 + sway, y0 - w * 0.46, w * 0.5 + sway, y0 - w * 0.18);
+    c.quadraticCurveTo(w * 0.34, y0 - w * 0.14, w * 0.44, y0);
+    c.closePath(); c.fill(); c.stroke();
+    // viền lông trắng mịn
+    c.fillStyle = '#fffdf9'; c.strokeStyle = 'rgba(180,190,195,.85)';
+    c.beginPath(); c.roundRect(-w * 0.48, y0 - w * 0.13, w * 0.96, w * 0.2, w * 0.1); c.fill(); c.stroke();
+    // quả bông trắng ở chóp mũ
+    c.beginPath(); c.arc(w * 0.5 + sway, y0 - w * 0.17, w * 0.125, 0, 7); c.fill(); c.stroke();
+    const k = (t * 1.2) % 2;
+    if (k < 1) { c.fillStyle = '#fff'; c.shadowColor = '#ffd23f'; c.shadowBlur = w * 0.2; star4(c, -w * 0.12, y0 - w * 0.38, w * 0.1 * Math.sin(k * Math.PI)); }
+  } else if (it.draw === 'antlers') {
+    const y0 = top + w * 0.06;
+    c.lineCap = 'round'; c.lineJoin = 'round';
+    c.strokeStyle = '#6f4222'; c.lineWidth = Math.max(2, w * 0.11);
+    c.shadowColor = 'rgba(217,138,60,.45)'; c.shadowBlur = w * 0.2;
+    for (const sx of [-1, 1]) {
+      c.beginPath();
+      c.moveTo(sx * w * 0.2, y0);
+      c.quadraticCurveTo(sx * w * 0.38, y0 - w * 0.24, sx * w * 0.46, y0 - w * 0.5);
+      c.moveTo(sx * w * 0.32, y0 - w * 0.2);
+      c.lineTo(sx * w * 0.16, y0 - w * 0.38);
+      c.moveTo(sx * w * 0.4, y0 - w * 0.35);
+      c.lineTo(sx * w * 0.56, y0 - w * 0.32);
+      c.stroke();
+      c.strokeStyle = '#9c6238'; c.lineWidth = Math.max(1, w * 0.045);
+      c.stroke();
+      c.strokeStyle = '#6f4222'; c.lineWidth = Math.max(2, w * 0.11);
+    }
+    // lá nhựa ruồi + quả đỏ ở giữa
+    c.fillStyle = '#276749';
+    c.beginPath(); c.ellipse(-w * 0.1, y0 - w * 0.04, w * 0.1, w * 0.05, -0.35, 0, 7); c.fill();
+    c.beginPath(); c.ellipse(w * 0.1, y0 - w * 0.04, w * 0.1, w * 0.05, 0.35, 0, 7); c.fill();
+    c.fillStyle = '#d62828';
+    c.beginPath(); c.arc(0, y0 - w * 0.03, w * 0.065, 0, 7); c.fill();
   }
   c.restore();
 }
@@ -172,6 +217,8 @@ const hatHtml = (id, size = 76) => `<canvas class="sh-hat" width="${size * 2}" h
 const GOLD = ['#ffd23f', '#ffb300', '#fff2a8', '#e0a100', '#ffffff'];
 const FIRE = ['#ff2a00', '#ff6a00', '#ffb000', '#ffe066'];
 const STAR = ['#ffffff', '#bfe3ff', '#8fd3ff', '#ffe98f'];
+const SNOW = ['#ffffff', '#d8f3ff', '#b8e8ff', '#ffe699'];
+const XMAS = ['#c23b3b', '#276749', '#ffd23f', '#ffffff'];
 const center = () => ({ x: innerWidth / 2, y: innerHeight * 0.45 });
 
 // emoji bắn ra từ một điểm
@@ -216,6 +263,22 @@ function dragon(y, small) {
   }, 30);
   setTimeout(() => { clearInterval(iv); d.remove(); }, small ? 1700 : 2600);
 }
+// xe tuần lộc ông già Noel bay ngang màn hình, thả quà & tuyết
+function santaSleigh(y, small) {
+  const d = el('div', 'lk-sleigh' + (small ? ' small' : ''), '🎅🦌🦌🛷');
+  d.style.top = y + 'px';
+  document.body.appendChild(d);
+  sfx.whoosh();
+  const iv = setInterval(() => {
+    const r = d.getBoundingClientRect();
+    if (!r.width) return;
+    const x = r.left + r.width * 0.72, hy = r.top + r.height * 0.55;
+    for (let j = 0; j < (small ? 2 : 5); j++) spawn({ x, y: hy, vx: 1 + Math.random() * 2.5, vy: 1 + Math.random() * 2.5, g: 0.04, life: 1.2,
+      decay: 0.02 + Math.random() * 0.015, size: 2.5 + Math.random() * 4, color: pick(XMAS) });
+    if (Math.random() < 0.55) spawn({ text: pick(['🎁', '❄️', '✨', '🎄']), x, y: hy, vx: (Math.random() - 0.5) * 1.8, vy: 1.4 + Math.random() * 1.4, g: 0.06, life: 1.35, decay: 0.018, size: small ? 18 : 24 });
+  }, 55);
+  setTimeout(() => { clearInterval(iv); d.remove(); }, small ? 1700 : 2600);
+}
 
 export const FX = {
   'fx-confetti': { icon: '🎊', play(pt, small) {
@@ -223,6 +286,12 @@ export const FX = {
     pop(pt, ['🎊', '🎉'], small ? 5 : 10);
     if (!small) confetti(240);
     sfx.pop();
+  } },
+  'fx-snow': { icon: '❄️', play(pt, small) {
+    burst(pt.x, pt.y, SNOW, small ? 45 : 85, small ? 6 : 9);
+    pop(pt, ['❄️', '❅', '🔔'], small ? 6 : 11, 6);
+    if (!small) { confetti(140, SNOW); rain(['❄️', '❅', '✨', '🔔'], 55, 26, { life: 2.8, decay: 0.004 }); }
+    tone(1046, 0.12, { type: 'sine', v: 0.06 }); tone(1319, 0.16, { type: 'sine', v: 0.06, delay: 0.07 }); tone(1568, 0.25, { type: 'sine', v: 0.06, delay: 0.14 });
   } },
   'fx-gold': { icon: '💰', play(pt, small) {
     burst(pt.x, pt.y, GOLD, small ? 50 : 90, small ? 7 : 10);
@@ -253,6 +322,14 @@ export const FX = {
       rain(['✨', '⭐', '🌟', '💫'], 55, 25, { life: 2.8, decay: 0.004 });
       setTimeout(() => rain(['✨', '⭐', '🌟', '🌠'], 50, 23, { life: 2.8, decay: 0.004 }), 1100);
     }
+  } },
+  'fx-santa': { icon: '🎅', play(pt, small) {
+    if (small) { pop(pt, ['🎅', '🎁', '❄️'], 7, 7); burst(pt.x, pt.y, XMAS, 60, 7); sfx.whoosh(); return; }
+    santaSleigh(innerHeight * 0.24, false);
+    rain(['❄️', '🎁', '✨'], 45, 26, { life: 2.8, decay: 0.0042 });
+    setTimeout(() => { burst(innerWidth * 0.55, innerHeight * 0.38, XMAS, 110, 10); rain(['🎁', '🎄', '❄️', '🎅'], 55, 28, { life: 2.8, decay: 0.004 }); }, 900);
+    setTimeout(() => { burst(innerWidth * 0.35, innerHeight * 0.44, XMAS, 95, 9); rain(['❄️', '🔔', '✨', '🎁'], 45, 26, { life: 2.8, decay: 0.0042 }); }, 1800);
+    tone(784, 0.12, { type: 'triangle', v: 0.08 }); tone(988, 0.12, { type: 'triangle', v: 0.08, delay: 0.12 }); tone(1175, 0.26, { type: 'triangle', v: 0.08, delay: 0.24 });
   } },
   'fx-dragon': { icon: '🐉', play(pt, small) {
     if (small) { pop(pt, ['🐉', '🔥', '🔥'], 7, 7); burst(pt.x, pt.y, FIRE, 60, 7); sfx.whoosh(); return; }
@@ -352,9 +429,10 @@ export function openRenameModal({ fromShop = false } = {}) {
   inp.focus();
 }
 
+const colOf = id => COLLECTIONS.find(c => c.id === id);
 export function openShop(startTab) {
   if (startTab) tab = startTab;
-  if (!SLOTS.some(s => s.id === tab)) tab = SLOTS[0].id;
+  if (!colOf(tab) && !SLOTS.some(s => s.id === tab)) tab = 'xmas';
   tryOn = {};
   const card = openModal(`<div class="sh-head"><h2>🛍️ Cửa hàng vật phẩm</h2><span class="grow"></span>
     <button class="ghost" data-ach title="Xem Thành tựu để nhận xu và danh hiệu">🎖️ Thành tựu</button>
@@ -405,8 +483,19 @@ export function openShop(startTab) {
       <div class="small muted">${trying ? '👗 Đang xem thử trang bị (chưa sở hữu)' : on ? 'Hiển thị thực tế trong phòng chờ' : 'Nhấn vào từng vật phẩm bên dưới để xem thử'}${cb ? ` · ${COMBO[cb].icon} Hiệu ứng bộ ${COMBO[cb].name}` : ''}${look.fx ? ` · ${FX[look.fx].icon} ${esc(ITEM[look.fx].name)}` : ''}</div></div>
       ${look.back || look.dice || look.hat || look.easel ? `<div class="sh-ingame" title="Trang bị trong trò chơi">${look.back ? backHtml(ITEM[look.back]) : ''}${look.dice ? dieHtml(look.dice) : ''}${look.hat ? hatHtml(look.hat, 64) : ''}${look.easel ? easelHtml(look.easel) : ''}</div>` : ''}`;
 
-    // 2 hàng: đồ của hub (mọi game) và đồ trong từng game, mỗi hàng một nhãn
+    // 3 hàng: bộ sưu tập theo chủ đề, đồ của hub (mọi game) và đồ trong từng game
     tabs.innerHTML = '';
+    const colRow = el('div', 'sh-tabrow', '<span class="sh-grp small muted">🎨 Bộ sưu tập</span><div class="sh-tablist"></div>');
+    for (const c of COLLECTIONS) {
+      const items = ITEMS.filter(x => x.col === c.id);
+      const n = items.reduce((sum, x) => sum + (owned.has(x.id) ? 1 : 0), 0);
+      const b = el('button', 'gp-tag' + (c.season ? ' sh-xmas-tab' : '') + (tab === c.id ? ' on' : ''), `${c.icon} ${esc(c.name)} <span>${n}/${items.length}</span>`);
+      b.title = `${c.desc} (Trang bị Khung + Tên cùng bộ để bật hiệu ứng combo)`;
+      b.onclick = () => { tab = c.id; paint(); };
+      colRow.lastChild.appendChild(b);
+    }
+    tabs.appendChild(colRow);
+
     for (const [grp, label] of [['hub', '✨ Toàn hệ thống'], ['game', '🎮 Trong game']]) {
       const row = el('div', 'sh-tabrow', `<span class="sh-grp small muted">${label}</span><div class="sh-tablist"></div>`), list = row.lastChild;
       for (const s of SLOTS.filter(x => (x.grp || 'hub') === grp)) {
@@ -420,9 +509,26 @@ export function openShop(startTab) {
     }
 
     grid.innerHTML = '';
-    const S = SLOTS.find(s => s.id === tab);
-    if (S && S.games) grid.appendChild(el('div', 'sh-note small', `🎮 Áp dụng trong <b>${esc(S.games)}</b> — ${esc(S.hint)}`));
-    for (const it of ITEMS.filter(x => x.slot === tab)) {
+    const C = colOf(tab), S = SLOTS.find(s => s.id === tab);
+    const shown = C ? ITEMS.filter(x => x.col === C.id) : ITEMS.filter(x => x.slot === tab);
+    if (C) {
+      const note = el('div', `sh-note small sh-col-note${C.season ? ' sh-xmas-note' : ''}`,
+        `<span>${C.icon} <b>Bộ sưu tập ${esc(C.name)}</b> — ${esc(C.desc)} Trang bị <b>Khung ảnh + Hiệu ứng tên</b> cùng bộ để bật hiệu ứng combo!</span>`);
+      const tryAll = el('button', 'ghost sh-try-all', '👗 Thử cả bộ');
+      tryAll.onclick = () => {
+        tryOn = {};
+        for (const it of shown) if (it.slot !== 'emote' && !it.consumable) tryOn[it.slot] = it.id;
+        sfx.pop();
+        paint();
+        const r = hero.getBoundingClientRect();
+        if (COMBO[C.id]) burst(r.left + 58, r.top + r.height / 2, COMBO[C.id].colors, 28, 6);
+      };
+      note.appendChild(tryAll);
+      grid.appendChild(note);
+    } else if (S && S.games) {
+      grid.appendChild(el('div', 'sh-note small', `🎮 Áp dụng trong <b>${esc(S.games)}</b> — ${esc(S.hint)}`));
+    }
+    for (const it of shown) {
       const R = RARITY[it.rar];
       if (it.consumable) {
         const price = itemPrice(it, W), sale = !!(it.firstSale && price < it.price);
@@ -454,9 +560,12 @@ export function openShop(startTab) {
         continue;
       }
       const has = owned.has(it.id), wearing = eq[it.slot] === it.id;
-      const c = el('div', `sh-item rar-${it.rar}${has ? ' owned' : ''}${wearing ? ' on' : ''}${tryOn[it.slot] === it.id ? ' try' : ''}`);
+      const slotInfo = C ? SLOTS.find(s => s.id === it.slot) : null;
+      const c = el('div', `sh-item rar-${it.rar}${has ? ' owned' : ''}${wearing ? ' on' : ''}${tryOn[it.slot] === it.id ? ' try' : ''}${it.col === 'xmas' ? ' is-xmas' : ''}`);
       c.style.setProperty('--rc', R.color);
-      c.innerHTML = `<div class="sh-prev">${preview(it, name, initial)}</div><div class="sh-name">${esc(it.name)}</div><div class="sh-rar">${R.name}</div>`;
+      c.innerHTML = `${it.col === 'xmas' && !C ? '<span class="sh-season">🎄 Noel</span>' : ''}` +
+        `${slotInfo ? `<div class="sh-slot">${slotInfo.icon} ${esc(slotInfo.name)}</div>` : ''}` +
+        `<div class="sh-prev">${preview(it, name, initial)}</div><div class="sh-name">${esc(it.name)}</div><div class="sh-rar">${R.name}</div>`;
       let btn;
       if (it.slot === 'emote') btn = has ? el('button', 'ghost', '✔ Đã sở hữu') : null;
       else if (wearing) { btn = el('button', 'ghost sh-on', '✔ Đang sử dụng'); btn.title = 'Nhấn để gỡ trang bị'; btn.onclick = e => { e.stopPropagation(); equip(it.slot, null); }; }
